@@ -14,12 +14,18 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 import { CornerDownLeft, Paperclip, Mic, Menu } from "lucide-react";
 import FlightSchedule from "../Flight/FlightSchedule";
+import FlightStatusCard from "../Flight/FlightStatusCard";
 
 export default function ChatPlayGround() {
   const [showFlightSchedule, setShowFlightSchedule] = useState(false);
+  const [showFlightStatus, setShowFlightStatus] = useState(false);
 
   const handleCardClick = () => {
     setShowFlightSchedule(true);
+  };
+
+  const handleStatusClick = () => {
+    setShowFlightStatus(true);
   };
 
   return (
@@ -106,7 +112,10 @@ export default function ChatPlayGround() {
                   </p>
                 </CardContent>
               </Card>
-              <Card className="bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
+              <Card
+                className="bg-white shadow-md hover:shadow-lg transition-shadow duration-300"
+                onClick={handleStatusClick}
+              >
                 <CardContent className="p-6">
                   <p className="text-gray-600">
                     What is the status of flight BA142?
@@ -115,6 +124,7 @@ export default function ChatPlayGround() {
               </Card>
             </div>
             {showFlightSchedule && <FlightSchedule />}
+            {showFlightStatus && <FlightStatusCard />}
           </main>
         </div>
       </div>
