@@ -78,50 +78,56 @@ export default function ChatPlayGround() {
           </header>
 
           <main className="max-w-3xl mx-auto">
-            <Card className="mb-12 bg-white shadow-lg">
-              <CardHeader>
-                <CardTitle className="text-4xl font-bold text-center text-[#000435]">
-                  FlightMinder AI
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="text-gray-600">
-                <p className="mb-4">
-                  This is an open source AI chatbot app template built with
-                  Next.js, the Vercel AI SDK, and Google Gemini.
-                </p>
-                <p>
-                  FlightMinder AI is your ultimate travel companion, providing
-                  real-time flight information, seamless payment options, and
-                  comprehensive flight tracking. Whether you&apos;re planning
-                  your next trip or staying updated on your current journey,
-                  FlightMinder AI ensures you have all the information you need
-                  at your fingertips. Stay informed, pay with ease, and track
-                  your flights effortlessly with FlightMinder AI.
-                </p>
-              </CardContent>
-            </Card>
+            {!showFlightSchedule && !showFlightStatus && (
+              <Card className="mb-12 bg-white shadow-lg">
+                <CardHeader>
+                  <CardTitle className="text-4xl font-bold text-center text-[#000435]">
+                    FlightMinder AI
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="text-gray-600">
+                  <p className="mb-4">
+                    This is an open source AI chatbot app template built with
+                    Next.js, the Vercel AI SDK, and Google Gemini.
+                  </p>
+                  <p>
+                    FlightMinder AI is your ultimate travel companion, providing
+                    real-time flight information, seamless payment options, and
+                    comprehensive flight tracking. Whether you&apos;re planning
+                    your next trip or staying updated on your current journey,
+                    FlightMinder AI ensures you have all the information you
+                    need at your fingertips. Stay informed, pay with ease, and
+                    track your flights effortlessly with FlightMinder AI.
+                  </p>
+                </CardContent>
+              </Card>
+            )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-              <Card
-                className="bg-white shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer"
-                onClick={handleCardClick}
-              >
-                <CardContent className="p-6">
-                  <p className="text-gray-600">
-                    List flights flying from San Francisco to Rome today
-                  </p>
-                </CardContent>
-              </Card>
-              <Card
-                className="bg-white shadow-md hover:shadow-lg transition-shadow duration-300"
-                onClick={handleStatusClick}
-              >
-                <CardContent className="p-6">
-                  <p className="text-gray-600">
-                    What is the status of flight BA142?
-                  </p>
-                </CardContent>
-              </Card>
+              {!showFlightSchedule && !showFlightStatus && (
+                <Card
+                  className="bg-white shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+                  onClick={handleCardClick}
+                >
+                  <CardContent className="p-6">
+                    <p className="text-gray-600">
+                      List flights flying from San Francisco to Rome today
+                    </p>
+                  </CardContent>
+                </Card>
+              )}
+              {!showFlightSchedule && !showFlightStatus && (
+                <Card
+                  className="bg-white shadow-md hover:shadow-lg transition-shadow duration-300"
+                  onClick={handleStatusClick}
+                >
+                  <CardContent className="p-6">
+                    <p className="text-gray-600">
+                      What is the status of flight BA142?
+                    </p>
+                  </CardContent>
+                </Card>
+              )}
             </div>
             {showFlightSchedule && <FlightSchedule />}
             {showFlightStatus && <FlightStatusCard />}
