@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,8 +29,15 @@ import {
   Turtle,
 } from "lucide-react";
 import FlightSchedule from "../Flight/FlightSchedule";
+import React, { useState } from 'react';
 
 export default function ChatPlayGround() {
+  const [showFlightSchedule, setShowFlightSchedule] = useState(false);
+
+  const handleCardClick = () => {
+    setShowFlightSchedule(true);
+  };
+
   return (
     <div className="min-h-screen bg-white text-gray-800">
       <div className="container mx-auto p-4">
@@ -70,7 +79,10 @@ export default function ChatPlayGround() {
           </Card>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-            <Card className="bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
+            <Card
+              className="bg-white shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+              onClick={handleCardClick}
+            >
               <CardContent className="p-6">
                 <p className="text-gray-600">
                   List flights flying from San Francisco to Rome today
@@ -85,7 +97,7 @@ export default function ChatPlayGround() {
               </CardContent>
             </Card>
           </div>
-          <FlightSchedule />
+          {showFlightSchedule && <FlightSchedule />}
 
           <div className="flex items-center space-x-2 bg-gray-100 p-2 rounded-lg">
             <Input
