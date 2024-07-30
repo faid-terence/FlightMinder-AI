@@ -86,8 +86,8 @@ export default function ChatPlayGround() {
                 <p>
                   FlightMinder AI is your ultimate travel companion, providing
                   real-time flight information, seamless payment options, and
-                  comprehensive flight tracking. Whether you're planning your
-                  next trip or staying updated on your current journey,
+                  comprehensive flight tracking. Whether you&apos;re planning
+                  your next trip or staying updated on your current journey,
                   FlightMinder AI ensures you have all the information you need
                   at your fingertips. Stay informed, pay with ease, and track
                   your flights effortlessly with FlightMinder AI.
