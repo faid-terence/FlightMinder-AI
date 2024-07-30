@@ -26,6 +26,7 @@ import {
   Triangle,
   Turtle,
 } from "lucide-react";
+import FlightSchedule from "../Flight/FlightSchedule";
 
 export default function ChatPlayGround() {
   return (
@@ -84,6 +85,7 @@ export default function ChatPlayGround() {
               </CardContent>
             </Card>
           </div>
+          <FlightSchedule />
 
           <div className="flex items-center space-x-2 bg-gray-100 p-2 rounded-lg">
             <Input
