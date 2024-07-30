@@ -27,7 +27,9 @@ export default function ChatPlayGround() {
       <div className="flex-grow overflow-auto">
         <div className="container mx-auto p-4">
           <header className="flex justify-between items-center mb-12 py-4">
-            <div className="text-xl font-semibold text-gray-700">Flight info</div>
+            <div className="text-xl font-semibold text-gray-700">
+              Flight info
+            </div>
 
             {/* Desktop menu */}
             <div className="hidden md:flex items-center">
@@ -73,7 +75,7 @@ export default function ChatPlayGround() {
             <Card className="mb-12 bg-white shadow-lg">
               <CardHeader>
                 <CardTitle className="text-4xl font-bold text-center text-[#000435]">
-                  Next.js Gemini Chatbot
+                  FlightMinder AI
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-gray-600">
@@ -82,11 +84,13 @@ export default function ChatPlayGround() {
                   Next.js, the Vercel AI SDK, and Google Gemini.
                 </p>
                 <p>
-                  It uses React Server Components with function calling to mix
-                  both text with generative UI responses from Gemini. The UI
-                  state is synced through the AI SDK so the model is always
-                  aware of your stateful interactions as they happen in the
-                  browser.
+                  FlightMinder AI is your ultimate travel companion, providing
+                  real-time flight information, seamless payment options, and
+                  comprehensive flight tracking. Whether you're planning your
+                  next trip or staying updated on your current journey,
+                  FlightMinder AI ensures you have all the information you need
+                  at your fingertips. Stay informed, pay with ease, and track
+                  your flights effortlessly with FlightMinder AI.
                 </p>
               </CardContent>
             </Card>
@@ -115,7 +119,7 @@ export default function ChatPlayGround() {
         </div>
       </div>
 
-      <div className="sticky bottom-0 bg-white p-4 border-t">
+      <div className="sticky bottom-0 bg-white p-4">
         <div className="flex items-center space-x-2 bg-gray-100 p-2 rounded-lg max-w-3xl mx-auto">
           <Input
             placeholder="Type your message here..."
