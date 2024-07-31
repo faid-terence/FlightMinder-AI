@@ -4,22 +4,23 @@ import { Button } from "@/components/ui/button";
 import SeatSelection from "../Seat/SeatChanger";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import PaymentForm from "../payment/PaymentForm";
+import { motion } from "framer-motion";
 
 const FlightCard = () => {
   const [showCard, setShowCard] = useState(false);
   const [showPaymentForm, setShowPaymentForm] = useState(false);
 
-  const handleShowCard = () => {
-    setShowCard(true);
-  };
-
-  const handleShowPaymentForm = () => {
-    setShowPaymentForm(true);
-  };
+  const handleShowCard = () => setShowCard(true);
+  const handleShowPaymentForm = () => setShowPaymentForm(true);
 
   return (
-    <div>
-      <div className="flex items-start space-x-4 mb-6">
+    <div className="container mx-auto px-4 py-6">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="flex items-start space-x-4 mb-6"
+      >
         <Avatar>
           <AvatarImage src="/path-to-avatar-image.jpg" alt="Avatar" />
           <AvatarFallback>AI</AvatarFallback>
@@ -30,10 +31,16 @@ const FlightCard = () => {
             Here is your flight information for BA142.
           </p>
         </div>
-      </div>
-      <Card className="w-full max-w-3xl mb-8">
+      </motion.div>
+
+      <Card className="w-full max-w-3xl mx-auto mb-8 shadow-md hover:shadow-lg transition-shadow duration-300">
         <CardContent className="p-6">
-          <div className="flex items-center justify-between mb-4">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className="flex items-center justify-between mb-4"
+          >
             <div className="flex items-center">
               <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center mr-2">
                 <svg
@@ -56,54 +63,91 @@ const FlightCard = () => {
                 <p className="text-sm text-gray-500">San Francisco to London</p>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           <div className="space-y-4">
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="font-bold">SFO</p>
-                <p className="text-sm text-gray-500">SFO</p>
-                <p className="text-xs text-gray-400">Terminal N · GATE D43</p>
-              </div>
-              <div className="text-right">
-                <p className="font-bold">10:00 AM</p>
-                <p className="text-sm text-gray-500">In 6h 50m</p>
-                <p className="text-xs text-red-500">2h 15m late</p>
-              </div>
-            </div>
+            <FlightInfo
+              city="SFO"
+              terminal="Terminal N"
+              gate="GATE D43"
+              time="10:00 AM"
+              delay="In 6h 50m"
+              lateInfo="2h 15m late"
+            />
 
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-gray-500 text-center">
               Total 11h 30m · 5,563mi · Overnight
             </div>
 
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="font-bold">LHR</p>
-                <p className="text-sm text-gray-500">LHR</p>
-                <p className="text-xs text-gray-400">Terminal 2 · GATE 59A</p>
-              </div>
-              <div className="text-right">
-                <p className="font-bold">1:30 PM</p>
-                <p className="text-xs text-red-500">2h 15m late</p>
-              </div>
-            </div>
+            <FlightInfo
+              city="LHR"
+              terminal="Terminal 2"
+              gate="GATE 59A"
+              time="1:30 PM"
+              lateInfo="2h 15m late"
+              delay={undefined}
+            />
           </div>
         </CardContent>
 
-        <CardFooter className="flex justify-between p-6 pt-0">
-          <Button variant="outline" onClick={handleShowCard}>
+        <CardFooter className="flex flex-wrap justify-between p-6 pt-0 gap-2">
+          <Button
+            variant="outline"
+            onClick={handleShowCard}
+            className="flex-grow"
+          >
             Change my seat
           </Button>
-          <Button variant="outline">Change my flight</Button>
-          <Button variant="outline" onClick={handleShowPaymentForm}>
+          <Button variant="outline" className="flex-grow">
+            Change my flight
+          </Button>
+          <Button
+            variant="outline"
+            onClick={handleShowPaymentForm}
+            className="flex-grow"
+          >
             Pay for flight
           </Button>
         </CardFooter>
       </Card>
-      {showCard && <SeatSelection isOpen={showCard} />}
+
+      {showCard && (
+        <SeatSelection isOpen={showCard} onClose={() => setShowCard(false)} />
+      )}
       {showPaymentForm && <PaymentForm />}
     </div>
   );
 };
+
+interface FlightInfoProps {
+  city: string;
+  terminal: string;
+  gate: string;
+  time: string;
+  delay?: string;
+  lateInfo: string;
+}
+
+const FlightInfo = ({ city, terminal, gate, time, delay, lateInfo }: FlightInfoProps) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5 }}
+    className="flex justify-between items-start"
+  >
+    <div>
+      <p className="font-bold">{city}</p>
+      <p className="text-sm text-gray-500">{city}</p>
+      <p className="text-xs text-gray-400">
+        {terminal} · {gate}
+      </p>
+    </div>
+    <div className="text-right">
+      <p className="font-bold">{time}</p>
+      {delay && <p className="text-sm text-gray-500">{delay}</p>}
+      <p className="text-xs text-red-500">{lateInfo}</p>
+    </div>
+  </motion.div>
+);
 
 export default FlightCard;
