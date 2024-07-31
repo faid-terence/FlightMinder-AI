@@ -125,7 +125,7 @@ export default function ChatPlayGround() {
               )}
               {!showFlightSchedule && !showFlightStatus && (
                 <Card
-                  className="bg-white shadow-md hover:shadow-lg transition-shadow duration-300"
+                  className="bg-white shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer"
                   onClick={handleStatusClick}
                 >
                   <CardContent className="p-6">

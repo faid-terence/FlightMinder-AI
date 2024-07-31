@@ -3,12 +3,18 @@ import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import SeatSelection from "../Seat/SeatChanger";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import PaymentForm from "../payment/PaymentForm";
 
 const FlightCard = () => {
   const [showCard, setShowCard] = useState(false);
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
 
   const handleShowCard = () => {
     setShowCard(true);
+  };
+
+  const handleShowPaymentForm = () => {
+    setShowPaymentForm(true);
   };
 
   return (
@@ -89,10 +95,13 @@ const FlightCard = () => {
             Change my seat
           </Button>
           <Button variant="outline">Change my flight</Button>
-          <Button variant="outline">Show boarding pass</Button>
+          <Button variant="outline" onClick={handleShowPaymentForm}>
+            Pay for flight
+          </Button>
         </CardFooter>
       </Card>
       {showCard && <SeatSelection isOpen={showCard} />}
+      {showPaymentForm && <PaymentForm />}
     </div>
   );
 };
