@@ -1,18 +1,30 @@
 import React, { useState } from "react";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import SeatSelection from "../Seat/SeatChanger";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const FlightCard = () => {
   const [showCard, setShowCard] = useState(false);
 
   const handleShowCard = () => {
-    console.log("Show card");
     setShowCard(true);
   };
 
   return (
     <div>
+      <div className="flex items-start space-x-4 mb-6">
+        <Avatar>
+          <AvatarImage src="/path-to-avatar-image.jpg" alt="Avatar" />
+          <AvatarFallback>AI</AvatarFallback>
+        </Avatar>
+        <div>
+          <CardTitle className="text-lg font-semibold mb-2">Hello!</CardTitle>
+          <p className="text-sm text-gray-600">
+            Here is your flight information for BA142.
+          </p>
+        </div>
+      </div>
       <Card className="w-full max-w-3xl mb-8">
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-4">
