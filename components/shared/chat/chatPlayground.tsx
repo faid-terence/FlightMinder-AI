@@ -34,7 +34,7 @@ export default function ChatPlayGround() {
         <div className="container mx-auto p-4">
           <header className="flex justify-between items-center mb-12 py-4">
             <div className="text-xl font-semibold text-gray-700">
-              Flight info
+            FlightMinder AI
             </div>
 
             {/* Desktop menu */}
@@ -86,10 +86,6 @@ export default function ChatPlayGround() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="text-gray-600">
-                  <p className="mb-4">
-                    This is an open source AI chatbot app template built with
-                    Next.js, the Vercel AI SDK, and Google Gemini.
-                  </p>
                   <p>
                     FlightMinder AI is your ultimate travel companion, providing
                     real-time flight information, seamless payment options, and
