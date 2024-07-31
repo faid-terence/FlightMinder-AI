@@ -35,12 +35,16 @@ export default function ChatPlayGround() {
     setShowSeatSelection(true);
   };
 
+  const reloadPage = () => {
+    window.location.reload();
+  };
+
   return (
     <div className="min-h-screen bg-white text-gray-800 flex flex-col">
       <div className="flex-grow overflow-auto">
         <div className="container mx-auto p-4">
           <header className="flex justify-between items-center mb-12 py-4">
-            <div className="text-xl font-semibold text-gray-700">
+            <div className="text-xl font-semibold text-gray-700 cursor-pointer" onClick={reloadPage}>
               FlightMinder AI
             </div>
 
@@ -134,7 +138,7 @@ export default function ChatPlayGround() {
             </div>
             {showFlightSchedule && <FlightSchedule />}
             {showFlightStatus && <FlightCard />}
-           {showSeatSelection && <SeatSelection />}
+            {showSeatSelection && <SeatSelection />}
           </main>
         </div>
       </div>
