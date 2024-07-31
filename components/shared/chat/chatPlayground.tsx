@@ -16,10 +16,12 @@ import { CornerDownLeft, Paperclip, Mic, Menu } from "lucide-react";
 import FlightSchedule from "../Flight/FlightSchedule";
 import FlightStatusCard from "../Flight/FlightStatusCard";
 import FlightCard from "../Flight/FlightStatusCard";
+import SeatSelection from "../Seat/SeatChanger";
 
 export default function ChatPlayGround() {
   const [showFlightSchedule, setShowFlightSchedule] = useState(false);
   const [showFlightStatus, setShowFlightStatus] = useState(false);
+  const [showSeatSelection, setShowSeatSelection] = useState(false);
 
   const handleCardClick = () => {
     setShowFlightSchedule(true);
@@ -29,13 +31,17 @@ export default function ChatPlayGround() {
     setShowFlightStatus(true);
   };
 
+  const handleSeatChanger = () => {
+    setShowSeatSelection(true);
+  };
+
   return (
     <div className="min-h-screen bg-white text-gray-800 flex flex-col">
       <div className="flex-grow overflow-auto">
         <div className="container mx-auto p-4">
           <header className="flex justify-between items-center mb-12 py-4">
             <div className="text-xl font-semibold text-gray-700">
-            FlightMinder AI
+              FlightMinder AI
             </div>
 
             {/* Desktop menu */}
@@ -128,6 +134,7 @@ export default function ChatPlayGround() {
             </div>
             {showFlightSchedule && <FlightSchedule />}
             {showFlightStatus && <FlightCard />}
+           {showSeatSelection && <SeatSelection />}
           </main>
         </div>
       </div>
