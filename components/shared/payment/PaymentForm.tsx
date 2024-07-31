@@ -20,14 +20,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
+import { motion } from "framer-motion";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const formSchema = z.object({
   cardHolderName: z.string().min(2, "Name is required"),
-  cardNumber: z.string().regex(/^\d{16}$/, "Invalid card number"),
+  cardNumber: z.string().regex(/^[0-9]{16}$/, "Invalid card number"),
   expiryDate: z
     .string()
     .regex(/^(0[1-9]|1[0-2])\/\d{2}$/, "Invalid expiry date (MM/YY)"),
-  cvv: z.string().regex(/^\d{3,4}$/, "Invalid CVV"),
+  cvv: z.string().regex(/^[0-9]{3,4}$/, "Invalid CVV"),
 });
 
 const PaymentForm = () => {
@@ -41,87 +43,81 @@ const PaymentForm = () => {
       cvv: "",
     },
   });
-
-  interface FormData {
+  interface PaymentFormData {
     cardHolderName: string;
     cardNumber: string;
     expiryDate: string;
     cvv: string;
-    }
+  }
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data : PaymentFormData) => {
     try {
-      const response = await fetch("/api/pay", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+      // Simulating API call
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      if (!response.ok) {
-        throw new Error("Payment failed");
-      }
-
-      await response.json();
       toast({
         title: "Payment Successful",
-        description: "Your payment has been processed.",
-        variant: "success" as "default" | "destructive" | null | undefined,
+        description: "Your payment has been processed."
       });
       form.reset();
     } catch (error: any) {
       toast({
         title: "Payment Failed",
-        description: error.message,
+        description: error.message || "An error occurred",
         variant: "destructive",
       });
     }
   };
 
+  const formatCardNumber = (value: any) => {
+    return value
+      .replace(/\s/g, "")
+      .replace(/(\d{4})/g, "$1 ")
+      .trim();
+  };
+
+  const formatExpiryDate = (value: any) => {
+    return value
+      .replace(/\D/g, "")
+      .replace(/^(\d{2})/, "$1/")
+      .substr(0, 5);
+  };
+
   return (
-    <Card className="w-full max-w-3xl">
-      <CardHeader>
-        <CardTitle className="text-2xl font-bold">
-          Payment Information
-        </CardTitle>
-      </CardHeader>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <CardContent className="space-y-4">
-            <FormField
-              control={form.control}
-              name="cardHolderName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Card Holder Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="John Doe" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="cardNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Card Number</FormLabel>
-                  <FormControl>
-                    <Input placeholder="1234567890123456" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="flex space-x-4">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <div className="flex items-start space-x-4 mb-6">
+        <Avatar>
+          <AvatarImage src="/path-to-avatar-image.jpg" alt="Avatar" />
+          <AvatarFallback>AI</AvatarFallback>
+        </Avatar>
+        <div>
+          <CardTitle className="text-lg font-semibold mb-2">Hello!</CardTitle>
+          <p className="text-sm text-gray-600">
+            Please enter your payment information to proceed.
+          </p>
+        </div>
+      </div>
+      <Card className="w-full max-w-md mx-auto">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold">
+            Payment Information
+          </CardTitle>
+        </CardHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <CardContent className="space-y-4">
               <FormField
                 control={form.control}
-                name="expiryDate"
+                name="cardHolderName"
                 render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <FormLabel>Expiry Date</FormLabel>
+                  <FormItem>
+                    <FormLabel>Card Holder Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="MM/YY" {...field} />
+                      <Input placeholder="John Doe" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -129,31 +125,82 @@ const PaymentForm = () => {
               />
               <FormField
                 control={form.control}
-                name="cvv"
+                name="cardNumber"
                 render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <FormLabel>CVV</FormLabel>
+                  <FormItem>
+                    <FormLabel>Card Number</FormLabel>
                     <FormControl>
-                      <Input placeholder="123" {...field} />
+                      <Input
+                        placeholder="1234 5678 9012 3456"
+                        {...field}
+                        onChange={(e) => {
+                          const formatted = formatCardNumber(e.target.value);
+                          field.onChange(formatted.replace(/\s/g, ""));
+                          e.target.value = formatted;
+                        }}
+                        maxLength={19}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={form.formState.isSubmitting}
-            >
-              {form.formState.isSubmitting ? "Processing..." : "Pay Now"}
-            </Button>
-          </CardFooter>
-        </form>
-      </Form>
-    </Card>
+              <div className="flex space-x-4">
+                <FormField
+                  control={form.control}
+                  name="expiryDate"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Expiry Date</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="MM/YY"
+                          {...field}
+                          onChange={(e) => {
+                            const formatted = formatExpiryDate(e.target.value);
+                            field.onChange(formatted);
+                            e.target.value = formatted;
+                          }}
+                          maxLength={5}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="cvv"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>CVV</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="123"
+                          {...field}
+                          type="password"
+                          maxLength={4}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={form.formState.isSubmitting}
+              >
+                {form.formState.isSubmitting ? "Processing..." : "Pay Now"}
+              </Button>
+            </CardFooter>
+          </form>
+        </Form>
+      </Card>
+    </motion.div>
   );
 };
 
