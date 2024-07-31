@@ -2,11 +2,9 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-const SeatSelection = () => {
+const SeatSelection = ({ isOpen }: any) => {
   const rows = [4, 3, 2, 1];
   const columns = ["A", "B", "C", "D"];
-
-  // State to keep track of the selected seat
   const [selectedSeat, setSelectedSeat] = useState<string | null>(null);
 
   const isSelected = (row: number, col: string) => {
@@ -17,6 +15,8 @@ const SeatSelection = () => {
     const seatId = `${row}${col}`;
     setSelectedSeat((prevSeat) => (prevSeat === seatId ? null : seatId));
   };
+
+  if (!isOpen) return null;
 
   return (
     <Card className="w-full max-w-md mx-auto">
