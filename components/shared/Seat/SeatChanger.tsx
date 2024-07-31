@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const SeatSelection = ({ isOpen }: any) => {
   const rows = [4, 3, 2, 1];
@@ -19,42 +20,53 @@ const SeatSelection = ({ isOpen }: any) => {
   if (!isOpen) return null;
 
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader>
-        <CardTitle className="text-lg font-semibold">
-          Great! Here are the available seats for your flight. Please select a
-          seat to continue.
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        {/* Flight info section remains the same */}
-        <div className="grid grid-cols-4 gap-2 p-4 bg-gray-100 rounded-lg">
-          {rows.map((row) => (
-            <React.Fragment key={row}>
-              {columns.map((col) => (
-                <Button
-                  key={`${row}${col}`}
-                  variant={isSelected(row, col) ? "default" : "outline"}
-                  className="w-12 h-12 p-0"
-                  onClick={() => handleSeatClick(row, col)}
-                >
-                  {row}
-                  {col}
-                </Button>
-              ))}
-            </React.Fragment>
-          ))}
+    <>
+      <div className="flex items-start space-x-4 mb-6">
+        <Avatar>
+          <AvatarImage src="/path-to-avatar-image.jpg" alt="Avatar" />
+          <AvatarFallback>AI</AvatarFallback>
+        </Avatar>
+        <div>
+          <CardTitle className="text-lg font-semibold mb-2">Great!</CardTitle>
+          <p className="text-sm text-gray-600">
+            Here are the available seats for your flight. Please select a seat
+            to continue.
+          </p>
         </div>
-        <div className="mt-4 grid grid-cols-4 text-center text-sm">
-          {columns.map((col) => (
-            <div key={col}>{col}</div>
-          ))}
-        </div>
-        {selectedSeat && (
-          <div className="mt-4 text-center">Selected seat: {selectedSeat}</div>
-        )}
-      </CardContent>
-    </Card>
+      </div>
+      <Card className="w-full max-w-md mx-auto">
+        <CardContent>
+          {/* Rest of the component remains the same */}
+          <div className="grid grid-cols-4 gap-2 p-4 bg-gray-100 rounded-lg mt-8">
+            {rows.map((row) => (
+              <React.Fragment key={row}>
+                {columns.map((col) => (
+                  <Button
+                    key={`${row}${col}`}
+                    variant={isSelected(row, col) ? "default" : "outline"}
+                    className="w-12 h-12 p-0"
+                    onClick={() => handleSeatClick(row, col)}
+                  >
+                    {row}
+                    {col}
+                  </Button>
+                ))}
+              </React.Fragment>
+            ))}
+          </div>
+          <div className="mt-4 grid grid-cols-4 text-center text-sm">
+            {columns.map((col) => (
+              <div key={col}>{col}</div>
+            ))}
+          </div>
+          {selectedSeat && (
+            <div className="mt-4 text-center">
+              Selected seat: {selectedSeat}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </>
   );
 };
 
