@@ -15,6 +15,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { CornerDownLeft, Paperclip, Mic, Menu } from "lucide-react";
 import FlightSchedule from "../Flight/FlightSchedule";
 import FlightStatusCard from "../Flight/FlightStatusCard";
+import FlightCard from "../Flight/FlightStatusCard";
 
 export default function ChatPlayGround() {
   const [showFlightSchedule, setShowFlightSchedule] = useState(false);
@@ -126,7 +127,7 @@ export default function ChatPlayGround() {
               )}
             </div>
             {showFlightSchedule && <FlightSchedule />}
-            {showFlightStatus && <FlightStatusCard />}
+            {showFlightStatus && <FlightCard />}
           </main>
         </div>
       </div>
