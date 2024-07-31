@@ -44,7 +44,10 @@ export default function ChatPlayGround() {
       <div className="flex-grow overflow-auto">
         <div className="container mx-auto p-4">
           <header className="flex justify-between items-center mb-12 py-4">
-            <div className="text-xl font-semibold text-gray-700 cursor-pointer" onClick={reloadPage}>
+            <div
+              className="text-xl font-semibold text-gray-700 cursor-pointer"
+              onClick={reloadPage}
+            >
               FlightMinder AI
             </div>
 
