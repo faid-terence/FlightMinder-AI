@@ -20,6 +20,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import PaymentForm from "../payment/PaymentForm";
+import FlightDetails from "./FlightDetails";
 
 const flights = [
   {
@@ -53,6 +54,7 @@ const FlightSchedule: React.FC = () => {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [selectedFlight, setSelectedFlight] = useState<number | null>(null);
   const [showCheckout, setShowCheckout] = useState<boolean>(false);
+  const [showDetails, setShowDetails] = useState<boolean>(false);
 
   const handleSort = (column: string) => {
     if (sortBy === column) {
@@ -81,6 +83,10 @@ const FlightSchedule: React.FC = () => {
 
   const handleShowCheckout = () => {
     setShowCheckout(true);
+  };
+
+  const handleToggleDetails = () => {
+    setShowDetails(!showDetails);
   };
 
   return (
@@ -168,7 +174,7 @@ const FlightSchedule: React.FC = () => {
             </Table>
           </RadioGroup>
         </CardContent>
-        <CardFooter className="flex justify-end">
+        <CardFooter className="flex justify-end space-x-2">
           <AnimatePresence>
             {selectedFlight && (
               <motion.div
@@ -176,7 +182,11 @@ const FlightSchedule: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
                 transition={{ duration: 0.3 }}
+                className="space-x-2"
               >
+                <Button variant="outline" onClick={handleToggleDetails}>
+                  {showDetails ? "Hide Details" : "View Details"}
+                </Button>
                 <Button onClick={handleShowCheckout}>
                   Proceed to Checkout
                 </Button>
@@ -185,6 +195,19 @@ const FlightSchedule: React.FC = () => {
           </AnimatePresence>
         </CardFooter>
       </Card>
+      {selectedFlight && showDetails && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.5 }}
+          className="mt-8"
+        >
+          <FlightDetails
+            flight={flights.find((f) => f.id === selectedFlight)!}
+          />
+        </motion.div>
+      )}
 
       <div className="mt-8">{showCheckout && <PaymentForm />}</div>
     </motion.div>
