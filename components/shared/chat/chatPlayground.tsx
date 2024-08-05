@@ -93,7 +93,7 @@ export default function ChatPlayGround() {
 
           <main className="max-w-3xl mx-auto">
             {!showFlightSchedule && !showFlightStatus && (
-              <Card className="mb-12 bg-white shadow-lg">
+              <Card className="mb-12 border-none bg-transparent">
                 <CardHeader>
                   <CardTitle className="text-4xl font-bold text-center text-[#000435]">
                     FlightMinder AI
