@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import PaymentForm from "../payment/PaymentForm";
 
 const flights = [
   {
@@ -51,6 +52,7 @@ const FlightSchedule: React.FC = () => {
   const [sortBy, setSortBy] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [selectedFlight, setSelectedFlight] = useState<number | null>(null);
+  const [showCheckout, setShowCheckout] = useState<boolean>(false);
 
   const handleSort = (column: string) => {
     if (sortBy === column) {
@@ -75,6 +77,10 @@ const FlightSchedule: React.FC = () => {
   const handleCheckout = () => {
     // Implement checkout logic here
     console.log(`Checking out flight with ID: ${selectedFlight}`);
+  };
+
+  const handleShowCheckout = () => {
+    setShowCheckout(true);
   };
 
   return (
@@ -171,12 +177,16 @@ const FlightSchedule: React.FC = () => {
                 exit={{ opacity: 0, y: 20 }}
                 transition={{ duration: 0.3 }}
               >
-                <Button onClick={handleCheckout}>Proceed to Checkout</Button>
+                <Button onClick={handleShowCheckout}>
+                  Proceed to Checkout
+                </Button>
               </motion.div>
             )}
           </AnimatePresence>
         </CardFooter>
       </Card>
+
+      <div className="mt-8">{showCheckout && <PaymentForm />}</div>
     </motion.div>
   );
 };
