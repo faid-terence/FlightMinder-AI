@@ -21,6 +21,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import PaymentForm from "../payment/PaymentForm";
 import FlightDetails from "./FlightDetails";
+import TravelerDetailsForm from "./TravelerDetailsForm";
 
 const flights = [
   {
@@ -55,6 +56,10 @@ const FlightSchedule: React.FC = () => {
   const [selectedFlight, setSelectedFlight] = useState<number | null>(null);
   const [showCheckout, setShowCheckout] = useState<boolean>(false);
   const [showDetails, setShowDetails] = useState<boolean>(false);
+  const [showTravelerDetails, setShowTravelerDetails] =
+    useState<boolean>(false);
+  const [travelers, setTravelers] = useState<string[]>([]);
+  const [seats, setSeats] = useState<number>(0);
 
   const handleSort = (column: string) => {
     if (sortBy === column) {
@@ -87,6 +92,26 @@ const FlightSchedule: React.FC = () => {
 
   const handleToggleDetails = () => {
     setShowDetails(!showDetails);
+  };
+
+  const handleShowTravelerDetails = () => {
+    setShowTravelerDetails(true);
+  };
+  const handleTravelerDetailsSubmit = (
+    newTravelers: string[],
+    newSeats: number,
+    totalPrice: number
+  ) => {
+    setTravelers(newTravelers);
+    setSeats(newSeats);
+    setShowTravelerDetails(false);
+    setShowCheckout(true);
+    // You might want to store the totalPrice in state if you need it later
+    // setTotalPrice(totalPrice);
+  };
+
+  const handleTravelerDetailsCancel = () => {
+    setShowTravelerDetails(false);
   };
 
   return (
@@ -187,8 +212,8 @@ const FlightSchedule: React.FC = () => {
                 <Button variant="outline" onClick={handleToggleDetails}>
                   {showDetails ? "Hide Details" : "View Details"}
                 </Button>
-                <Button onClick={handleShowCheckout}>
-                  Proceed to Checkout
+                <Button onClick={handleShowTravelerDetails}>
+                  Proceed to Traveler Details
                 </Button>
               </motion.div>
             )}
@@ -206,6 +231,30 @@ const FlightSchedule: React.FC = () => {
           <FlightDetails
             flight={flights.find((f) => f.id === selectedFlight)!}
           />
+        </motion.div>
+      )}
+
+      {selectedFlight && showTravelerDetails && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.5 }}
+          className="mt-8"
+        >
+          <Card>
+            <CardContent className="pt-6">
+              <TravelerDetailsForm
+                onSubmit={handleTravelerDetailsSubmit}
+                onCancel={handleTravelerDetailsCancel}
+                flightPrice={parseFloat(
+                  flights
+                    .find((f) => f.id === selectedFlight)!
+                    .price.replace("$", "")
+                )}
+              />
+            </CardContent>
+          </Card>
         </motion.div>
       )}
 
