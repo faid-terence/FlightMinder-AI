@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -8,13 +8,29 @@ const SeatSelection = ({ isOpen }: any) => {
   const columns = ["A", "B", "C", "D"];
   const [selectedSeat, setSelectedSeat] = useState<string | null>(null);
 
+  // List of disabled seats
+  const disabledSeats = ["4A", "3B", "2C", "1D"];
+
   const isSelected = (row: number, col: string) => {
     return selectedSeat === `${row}${col}`;
   };
 
+  const isDisabled = (row: number, col: string) => {
+    return disabledSeats.includes(`${row}${col}`);
+  };
+
   const handleSeatClick = (row: number, col: string) => {
     const seatId = `${row}${col}`;
-    setSelectedSeat((prevSeat) => (prevSeat === seatId ? null : seatId));
+    if (!isDisabled(row, col)) {
+      setSelectedSeat((prevSeat) => (prevSeat === seatId ? null : seatId));
+    }
+  };
+
+  const handleConfirmClick = () => {
+    if (selectedSeat) {
+      alert(`Seat ${selectedSeat} has been confirmed!`);
+      // Additional actions like API calls or state updates can be handled here
+    }
   };
 
   if (!isOpen) return null;
@@ -36,7 +52,6 @@ const SeatSelection = ({ isOpen }: any) => {
       </div>
       <Card className="w-full max-w-md mx-auto">
         <CardContent>
-          {/* Rest of the component remains the same */}
           <div className="grid grid-cols-4 gap-2 p-4 bg-gray-100 rounded-lg mt-8">
             {rows.map((row) => (
               <React.Fragment key={row}>
@@ -44,8 +59,9 @@ const SeatSelection = ({ isOpen }: any) => {
                   <Button
                     key={`${row}${col}`}
                     variant={isSelected(row, col) ? "default" : "outline"}
-                    className="w-12 h-12 p-0"
+                    className={`w-12 h-12 p-0 ${isDisabled(row, col) ? "cursor-not-allowed opacity-50" : ""}`}
                     onClick={() => handleSeatClick(row, col)}
+                    disabled={isDisabled(row, col)}
                   >
                     {row}
                     {col}
@@ -61,7 +77,10 @@ const SeatSelection = ({ isOpen }: any) => {
           </div>
           {selectedSeat && (
             <div className="mt-4 text-center">
-              Selected seat: {selectedSeat}
+              <div>Selected seat: {selectedSeat}</div>
+              <Button className="mt-2" onClick={handleConfirmClick}>
+                Confirm Seat
+              </Button>
             </div>
           )}
         </CardContent>
