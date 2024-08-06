@@ -25,7 +25,7 @@ const FlightDetails: React.FC<FlightDetailsProps> = ({ flight }) => {
       transition={{ duration: 0.5 }}
     >
       <Card className="w-full max-w-2xl mx-auto bg-gradient-to-br from-blue-50 to-indigo-50">
-        <CardHeader className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-t-lg">
+        <CardHeader className="bg-[#000435] text-white rounded-t-lg">
           <CardTitle className="text-2xl font-bold flex items-center">
             <Plane className="mr-2" /> Flight Details
           </CardTitle>
