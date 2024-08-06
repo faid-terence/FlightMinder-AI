@@ -17,6 +17,7 @@ import FlightSchedule from "../Flight/FlightSchedule";
 import FlightStatusCard from "../Flight/FlightStatusCard";
 import FlightCard from "../Flight/FlightStatusCard";
 import SeatSelection from "../Seat/SeatChanger";
+import FlightPicker from "../Flight/FlightPicker";
 
 export default function ChatPlayGround() {
   const [showFlightSchedule, setShowFlightSchedule] = useState(false);
@@ -142,6 +143,7 @@ export default function ChatPlayGround() {
             {showFlightSchedule && <FlightSchedule />}
             {showFlightStatus && <FlightCard />}
             {showSeatSelection && <SeatSelection />}
+            {/* <FlightPicker /> */}
           </main>
         </div>
       </div>
