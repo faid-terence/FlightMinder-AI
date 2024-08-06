@@ -61,6 +61,7 @@ const FlightSchedule: React.FC = () => {
   const [travelers, setTravelers] = useState<string[]>([]);
   const [seats, setSeats] = useState<number>(0);
   const TravelerDetailsFormRef = useRef<HTMLDivElement>(null);
+  const FlightDetailsFormRef = useRef<HTMLDivElement>(null);
 
   const handleSort = (column: string) => {
     if (sortBy === column) {
@@ -75,7 +76,10 @@ const FlightSchedule: React.FC = () => {
     if (showTravelerDetails && TravelerDetailsFormRef.current) {
       TravelerDetailsFormRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [showTravelerDetails]);
+    if (showDetails && FlightDetailsFormRef.current) {
+      FlightDetailsFormRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [showTravelerDetails, showDetails]);
 
   const sortedFlights = [...flights].sort((a, b) => {
     if (!sortBy) return 0;
@@ -235,9 +239,11 @@ const FlightSchedule: React.FC = () => {
           transition={{ duration: 0.5 }}
           className="mt-8"
         >
-          <FlightDetails
-            flight={flights.find((f) => f.id === selectedFlight)!}
-          />
+          <div ref={FlightDetailsFormRef}>
+            <FlightDetails
+              flight={flights.find((f) => f.id === selectedFlight)!}
+            />
+          </div>
         </motion.div>
       )}
 
