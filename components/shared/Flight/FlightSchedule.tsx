@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Table,
   TableBody,
@@ -60,6 +60,7 @@ const FlightSchedule: React.FC = () => {
     useState<boolean>(false);
   const [travelers, setTravelers] = useState<string[]>([]);
   const [seats, setSeats] = useState<number>(0);
+  const TravelerDetailsFormRef = useRef<HTMLDivElement>(null);
 
   const handleSort = (column: string) => {
     if (sortBy === column) {
@@ -69,6 +70,12 @@ const FlightSchedule: React.FC = () => {
       setSortOrder("asc");
     }
   };
+
+  useEffect(() => {
+    if (showTravelerDetails && TravelerDetailsFormRef.current) {
+      TravelerDetailsFormRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [showTravelerDetails]);
 
   const sortedFlights = [...flights].sort((a, b) => {
     if (!sortBy) return 0;
@@ -244,15 +251,17 @@ const FlightSchedule: React.FC = () => {
         >
           <Card>
             <CardContent className="pt-6">
-              <TravelerDetailsForm
-                onSubmit={handleTravelerDetailsSubmit}
-                onCancel={handleTravelerDetailsCancel}
-                flightPrice={parseFloat(
-                  flights
-                    .find((f) => f.id === selectedFlight)!
-                    .price.replace("$", "")
-                )}
-              />
+              <div ref={TravelerDetailsFormRef}>
+                <TravelerDetailsForm
+                  onSubmit={handleTravelerDetailsSubmit}
+                  onCancel={handleTravelerDetailsCancel}
+                  flightPrice={parseFloat(
+                    flights
+                      .find((f) => f.id === selectedFlight)!
+                      .price.replace("$", "")
+                  )}
+                />
+              </div>
             </CardContent>
           </Card>
         </motion.div>
