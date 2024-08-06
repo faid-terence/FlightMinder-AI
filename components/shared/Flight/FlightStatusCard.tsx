@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import SeatSelection from "../Seat/SeatChanger";
@@ -9,9 +9,16 @@ import { motion } from "framer-motion";
 const FlightCard = () => {
   const [showCard, setShowCard] = useState(false);
   const [showPaymentForm, setShowPaymentForm] = useState(false);
+  const paymentFormRef = useRef<HTMLDivElement>(null);
 
   const handleShowCard = () => setShowCard(true);
   const handleShowPaymentForm = () => setShowPaymentForm(true);
+
+  useEffect(() => {
+    if (showPaymentForm && paymentFormRef.current) {
+      paymentFormRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [showPaymentForm]);
 
   return (
     <div className="container mx-auto px-4 py-6">
@@ -114,7 +121,11 @@ const FlightCard = () => {
       {showCard && (
         <SeatSelection isOpen={showCard} onClose={() => setShowCard(false)} />
       )}
-      {showPaymentForm && <PaymentForm />}
+      {showPaymentForm && (
+        <div ref={paymentFormRef}>
+          <PaymentForm />
+        </div>
+      )}
     </div>
   );
 };
@@ -128,7 +139,14 @@ interface FlightInfoProps {
   lateInfo: string;
 }
 
-const FlightInfo = ({ city, terminal, gate, time, delay, lateInfo }: FlightInfoProps) => (
+const FlightInfo = ({
+  city,
+  terminal,
+  gate,
+  time,
+  delay,
+  lateInfo,
+}: FlightInfoProps) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
