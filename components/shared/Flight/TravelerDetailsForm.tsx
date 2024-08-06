@@ -5,7 +5,14 @@ import { Label } from "@/components/ui/label";
 import { Plus, Minus } from "lucide-react";
 
 interface TravelerDetailsFormProps {
-  onSubmit: (travelers: string[], seats: number, totalPrice: number) => void;
+  onSubmit: (
+    travelers: string[],
+    adults: number,
+    children: number,
+    pets: number,
+    extraLuggage: number,
+    totalPrice: number
+  ) => void;
   onCancel: () => void;
   flightPrice: number;
 }
@@ -16,22 +23,30 @@ const TravelerDetailsForm: React.FC<TravelerDetailsFormProps> = ({
   flightPrice,
 }) => {
   const [travelers, setTravelers] = useState<string[]>([""]);
-  const [seats, setSeats] = useState(1);
+  const [adults, setAdults] = useState(1);
+  const [children, setChildren] = useState(0);
+  const [pets, setPets] = useState(0);
+  const [extraLuggage, setExtraLuggage] = useState(0);
   const [totalPrice, setTotalPrice] = useState(flightPrice);
 
   useEffect(() => {
-    setTotalPrice(flightPrice * seats);
-  }, [seats, flightPrice]);
+    const calculateTotalPrice = () => {
+      const totalTravelers = adults + children;
+      const extraCost = pets * 50 + extraLuggage * 20; // Example costs for pets and extra luggage
+      setTotalPrice(flightPrice * totalTravelers + extraCost);
+    };
+    calculateTotalPrice();
+  }, [adults, children, pets, extraLuggage, flightPrice]);
 
   const handleAddTraveler = () => {
     setTravelers([...travelers, ""]);
-    setSeats(seats + 1);
+    setAdults(adults + 1);
   };
 
   const handleRemoveTraveler = (index: number) => {
     const newTravelers = travelers.filter((_, i) => i !== index);
     setTravelers(newTravelers);
-    setSeats(seats - 1);
+    setAdults(adults - 1);
   };
 
   const handleTravelerNameChange = (index: number, name: string) => {
@@ -44,7 +59,10 @@ const TravelerDetailsForm: React.FC<TravelerDetailsFormProps> = ({
     e.preventDefault();
     onSubmit(
       travelers.filter((t) => t.trim() !== ""),
-      seats,
+      adults,
+      children,
+      pets,
+      extraLuggage,
       totalPrice
     );
   };
@@ -79,19 +97,57 @@ const TravelerDetailsForm: React.FC<TravelerDetailsFormProps> = ({
       <Button type="button" variant="outline" onClick={handleAddTraveler}>
         <Plus className="h-4 w-4 mr-2" /> Add Traveler
       </Button>
-      <div className="flex justify-between items-center">
+      <div className="flex space-x-4">
         <div>
-          <Label htmlFor="seats">Number of Seats</Label>
+          <Label htmlFor="adults">Adults</Label>
           <Input
-            id="seats"
+            id="adults"
             type="number"
-            value={seats}
-            onChange={(e) => setSeats(parseInt(e.target.value))}
+            value={adults}
+            onChange={(e) => setAdults(parseInt(e.target.value))}
             min={1}
             max={10}
             required
           />
         </div>
+        <div>
+          <Label htmlFor="children">Children</Label>
+          <Input
+            id="children"
+            type="number"
+            value={children}
+            onChange={(e) => setChildren(parseInt(e.target.value))}
+            min={0}
+            max={10}
+            required
+          />
+        </div>
+        <div>
+          <Label htmlFor="pets">Pets</Label>
+          <Input
+            id="pets"
+            type="number"
+            value={pets}
+            onChange={(e) => setPets(parseInt(e.target.value))}
+            min={0}
+            max={5}
+            required
+          />
+        </div>
+        <div>
+          <Label htmlFor="extraLuggage">Extra Luggage</Label>
+          <Input
+            id="extraLuggage"
+            type="number"
+            value={extraLuggage}
+            onChange={(e) => setExtraLuggage(parseInt(e.target.value))}
+            min={0}
+            max={10}
+            required
+          />
+        </div>
+      </div>
+      <div className="flex justify-between items-center">
         <div className="text-right">
           <Label>Total Price</Label>
           <p className="text-lg font-semibold">${totalPrice.toFixed(2)}</p>
