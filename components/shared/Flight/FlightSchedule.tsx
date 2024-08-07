@@ -50,6 +50,11 @@ const flights = [
   },
 ];
 
+interface Traveler {
+  name: string;
+  type: "adult" | "child";
+}
+
 const FlightSchedule: React.FC = () => {
   const [sortBy, setSortBy] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
@@ -108,11 +113,11 @@ const FlightSchedule: React.FC = () => {
     setShowTravelerDetails(true);
   };
   const handleTravelerDetailsSubmit = (
-    newTravelers: string[],
+    newTravelers: Traveler[],
     newSeats: number,
     totalPrice: number
   ) => {
-    setTravelers(newTravelers);
+    setTravelers(newTravelers.map((traveler) => traveler.name));
     setSeats(newSeats);
     setShowTravelerDetails(false);
     setShowCheckout(true);
@@ -217,7 +222,9 @@ const FlightSchedule: React.FC = () => {
                 transition={{ duration: 0.3 }}
                 className="space-x-2"
               >
-                <FlightDetails flight={flights.find((f) => f.id === selectedFlight)!} />
+                <FlightDetails
+                  flight={flights.find((f) => f.id === selectedFlight)!}
+                />
                 <Button onClick={handleShowTravelerDetails}>
                   Proceed to Traveler Details
                 </Button>
