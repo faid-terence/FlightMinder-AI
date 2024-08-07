@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "FlightMinder AI",
-  description: "Gemini clone !",
+  description: "Flight Planning AI Agent !",
 };
 
 export default function RootLayout({

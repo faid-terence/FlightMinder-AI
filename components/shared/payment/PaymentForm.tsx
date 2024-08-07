@@ -32,7 +32,12 @@ const formSchema = z.object({
   cvv: z.string().regex(/^[0-9]{3,4}$/, "Invalid CVV"),
 });
 
-const PaymentForm = () => {
+interface PaymentFormProps {
+  totalAmount: number;
+  onCancel: () => void;
+}
+
+const PaymentForm: React.FC<PaymentFormProps> = ({ totalAmount, onCancel }) => {
   const { toast } = useToast();
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -43,6 +48,7 @@ const PaymentForm = () => {
       cvv: "",
     },
   });
+
   interface PaymentFormData {
     cardHolderName: string;
     cardNumber: string;
@@ -50,14 +56,14 @@ const PaymentForm = () => {
     cvv: string;
   }
 
-  const onSubmit = async (data : PaymentFormData) => {
+  const onSubmit = async (data: PaymentFormData) => {
     try {
       // Simulating API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       toast({
         title: "Payment Successful",
-        description: "Your payment has been processed."
+        description: "Your payment has been processed.",
       });
       form.reset();
     } catch (error: any) {
@@ -106,6 +112,9 @@ const PaymentForm = () => {
           <CardTitle className="text-2xl font-bold">
             Payment Information
           </CardTitle>
+          <p className="text-lg font-semibold text-gray-700">
+            Total Amount: ${totalAmount.toFixed(2)}
+          </p>
         </CardHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -188,10 +197,13 @@ const PaymentForm = () => {
                 />
               </div>
             </CardContent>
-            <CardFooter>
+            <CardFooter className="flex justify-between">
+              <Button type="button" variant="outline" onClick={onCancel} className="w-1/3">
+                Cancel
+              </Button>
               <Button
                 type="submit"
-                className="w-full"
+                className="w-1/2"
                 disabled={form.formState.isSubmitting}
               >
                 {form.formState.isSubmitting ? "Processing..." : "Pay Now"}
