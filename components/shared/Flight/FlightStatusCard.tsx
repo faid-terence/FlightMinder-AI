@@ -9,11 +9,13 @@ import { motion } from "framer-motion";
 const FlightCard = () => {
   const [showCard, setShowCard] = useState(false);
   const [showPaymentForm, setShowPaymentForm] = useState(false);
+  const [totalAmount, setTotalAmount] = useState(500); // Example total amount
   const paymentFormRef = useRef<HTMLDivElement>(null);
   const SeatChangerRef = useRef<HTMLDivElement>(null);
 
   const handleShowCard = () => setShowCard(true);
   const handleShowPaymentForm = () => setShowPaymentForm(true);
+  const handlePaymentCancel = () => setShowPaymentForm(false);
 
   useEffect(() => {
     if (showPaymentForm && paymentFormRef.current) {
@@ -23,7 +25,7 @@ const FlightCard = () => {
     if (showCard && SeatChangerRef.current) {
       SeatChangerRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [showPaymentForm]);
+  }, [showPaymentForm, showCard]);
 
   return (
     <div className="container mx-auto px-4 py-6">
@@ -130,7 +132,10 @@ const FlightCard = () => {
       )}
       {showPaymentForm && (
         <div ref={paymentFormRef}>
-          <PaymentForm />
+          <PaymentForm
+            totalAmount={totalAmount}
+            onCancel={handlePaymentCancel}
+          />
         </div>
       )}
     </div>
