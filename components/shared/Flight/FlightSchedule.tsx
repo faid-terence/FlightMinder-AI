@@ -63,8 +63,9 @@ const FlightSchedule: React.FC = () => {
   const [showDetails, setShowDetails] = useState<boolean>(false);
   const [showTravelerDetails, setShowTravelerDetails] =
     useState<boolean>(false);
-  const [travelers, setTravelers] = useState<string[]>([]);
+  const [travelers, setTravelers] = useState<Traveler[]>([]);
   const [seats, setSeats] = useState<number>(0);
+  const [totalAmount, setTotalAmount] = useState<number>(0);
   const TravelerDetailsFormRef = useRef<HTMLDivElement>(null);
   const FlightDetailsFormRef = useRef<HTMLDivElement>(null);
 
@@ -97,14 +98,6 @@ const FlightSchedule: React.FC = () => {
     return 0;
   });
 
-  const handleCheckout = () => {
-    console.log(`Checking out flight with ID: ${selectedFlight}`);
-  };
-
-  const handleShowCheckout = () => {
-    setShowCheckout(true);
-  };
-
   const handleToggleDetails = () => {
     setShowDetails(!showDetails);
   };
@@ -112,19 +105,26 @@ const FlightSchedule: React.FC = () => {
   const handleShowTravelerDetails = () => {
     setShowTravelerDetails(true);
   };
+
   const handleTravelerDetailsSubmit = (
     newTravelers: Traveler[],
     newSeats: number,
     totalPrice: number
   ) => {
-    setTravelers(newTravelers.map((traveler) => traveler.name));
+    setTravelers(newTravelers);
     setSeats(newSeats);
+    setTotalAmount(totalPrice);
     setShowTravelerDetails(false);
     setShowCheckout(true);
   };
 
   const handleTravelerDetailsCancel = () => {
     setShowTravelerDetails(false);
+  };
+
+  const handlePaymentCancel = () => {
+    setShowCheckout(false);
+    setShowTravelerDetails(true);
   };
 
   return (
@@ -222,9 +222,11 @@ const FlightSchedule: React.FC = () => {
                 transition={{ duration: 0.3 }}
                 className="space-x-2"
               >
-                <FlightDetails
-                  flight={flights.find((f) => f.id === selectedFlight)!}
-                />
+                <Button variant="outline" onClick={handleToggleDetails}>
+                  <FlightDetails
+                    flight={flights.find((f) => f.id === selectedFlight)!}
+                  />
+                </Button>
                 <Button onClick={handleShowTravelerDetails}>
                   Proceed to Traveler Details
                 </Button>
@@ -275,7 +277,14 @@ const FlightSchedule: React.FC = () => {
         </motion.div>
       )}
 
-      <div className="mt-8">{showCheckout && <PaymentForm />}</div>
+      <div className="mt-8">
+        {showCheckout && (
+          <PaymentForm
+            totalAmount={totalAmount}
+            onCancel={handlePaymentCancel}
+          />
+        )}
+      </div>
     </motion.div>
   );
 };
