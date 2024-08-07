@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useToast } from "@/components/ui/use-toast";
 
 const SeatSelection = ({ isOpen }: any) => {
   const rows = [4, 3, 2, 1];
   const columns = ["A", "B", "C", "D"];
   const [selectedSeat, setSelectedSeat] = useState<string | null>(null);
-
-  // List of disabled seats
+  const SeatChangerRef = useRef<HTMLDivElement>(null);
   const disabledSeats = ["4A", "3B", "2C", "1D"];
+
+  const { toast } = useToast();
 
   const isSelected = (row: number, col: string) => {
     return selectedSeat === `${row}${col}`;
@@ -28,8 +30,10 @@ const SeatSelection = ({ isOpen }: any) => {
 
   const handleConfirmClick = () => {
     if (selectedSeat) {
-      alert(`Seat ${selectedSeat} has been confirmed!`);
-      // Additional actions like API calls or state updates can be handled here
+      toast({
+        title: "Seat Confirmed",
+        description: `Seat ${selectedSeat} has been confirmed!`,
+      });
     }
   };
 
@@ -59,7 +63,11 @@ const SeatSelection = ({ isOpen }: any) => {
                   <Button
                     key={`${row}${col}`}
                     variant={isSelected(row, col) ? "default" : "outline"}
-                    className={`w-12 h-12 p-0 ${isDisabled(row, col) ? "cursor-not-allowed opacity-50" : ""}`}
+                    className={`w-12 h-12 p-0 ${
+                      isDisabled(row, col)
+                        ? "cursor-not-allowed opacity-50"
+                        : ""
+                    }`}
                     onClick={() => handleSeatClick(row, col)}
                     disabled={isDisabled(row, col)}
                   >

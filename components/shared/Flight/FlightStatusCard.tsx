@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import SeatSelection from "../Seat/SeatChanger";
@@ -9,9 +9,23 @@ import { motion } from "framer-motion";
 const FlightCard = () => {
   const [showCard, setShowCard] = useState(false);
   const [showPaymentForm, setShowPaymentForm] = useState(false);
+  const [totalAmount, setTotalAmount] = useState(500); // Example total amount
+  const paymentFormRef = useRef<HTMLDivElement>(null);
+  const SeatChangerRef = useRef<HTMLDivElement>(null);
 
   const handleShowCard = () => setShowCard(true);
   const handleShowPaymentForm = () => setShowPaymentForm(true);
+  const handlePaymentCancel = () => setShowPaymentForm(false);
+
+  useEffect(() => {
+    if (showPaymentForm && paymentFormRef.current) {
+      paymentFormRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+
+    if (showCard && SeatChangerRef.current) {
+      SeatChangerRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [showPaymentForm, showCard]);
 
   return (
     <div className="container mx-auto px-4 py-6">
@@ -112,9 +126,18 @@ const FlightCard = () => {
       </Card>
 
       {showCard && (
-        <SeatSelection isOpen={showCard} onClose={() => setShowCard(false)} />
+        <div ref={SeatChangerRef}>
+          <SeatSelection isOpen={showCard} onClose={() => setShowCard(false)} />
+        </div>
       )}
-      {showPaymentForm && <PaymentForm />}
+      {showPaymentForm && (
+        <div ref={paymentFormRef}>
+          <PaymentForm
+            totalAmount={totalAmount}
+            onCancel={handlePaymentCancel}
+          />
+        </div>
+      )}
     </div>
   );
 };
@@ -128,7 +151,14 @@ interface FlightInfoProps {
   lateInfo: string;
 }
 
-const FlightInfo = ({ city, terminal, gate, time, delay, lateInfo }: FlightInfoProps) => (
+const FlightInfo = ({
+  city,
+  terminal,
+  gate,
+  time,
+  delay,
+  lateInfo,
+}: FlightInfoProps) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}

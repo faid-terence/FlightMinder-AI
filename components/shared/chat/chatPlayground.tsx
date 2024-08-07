@@ -17,6 +17,7 @@ import FlightSchedule from "../Flight/FlightSchedule";
 import FlightStatusCard from "../Flight/FlightStatusCard";
 import FlightCard from "../Flight/FlightStatusCard";
 import SeatSelection from "../Seat/SeatChanger";
+import FlightPicker from "../Flight/FlightPicker";
 
 export default function ChatPlayGround() {
   const [showFlightSchedule, setShowFlightSchedule] = useState(false);
@@ -93,7 +94,7 @@ export default function ChatPlayGround() {
 
           <main className="max-w-3xl mx-auto">
             {!showFlightSchedule && !showFlightStatus && (
-              <Card className="mb-12 bg-white shadow-lg">
+              <Card className="mb-12 border-none bg-transparent">
                 <CardHeader>
                   <CardTitle className="text-4xl font-bold text-center text-[#000435]">
                     FlightMinder AI
@@ -142,6 +143,7 @@ export default function ChatPlayGround() {
             {showFlightSchedule && <FlightSchedule />}
             {showFlightStatus && <FlightCard />}
             {showSeatSelection && <SeatSelection />}
+            {/* <FlightPicker /> */}
           </main>
         </div>
       </div>

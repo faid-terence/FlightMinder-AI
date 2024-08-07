@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Table,
   TableBody,
@@ -20,6 +20,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import PaymentForm from "../payment/PaymentForm";
+import FlightDetails from "./FlightDetails";
+import TravelerDetailsForm from "./TravelerDetailsForm";
 
 const flights = [
   {
@@ -48,11 +50,24 @@ const flights = [
   },
 ];
 
+interface Traveler {
+  name: string;
+  type: "adult" | "child";
+}
+
 const FlightSchedule: React.FC = () => {
   const [sortBy, setSortBy] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [selectedFlight, setSelectedFlight] = useState<number | null>(null);
   const [showCheckout, setShowCheckout] = useState<boolean>(false);
+  const [showDetails, setShowDetails] = useState<boolean>(false);
+  const [showTravelerDetails, setShowTravelerDetails] =
+    useState<boolean>(false);
+  const [travelers, setTravelers] = useState<Traveler[]>([]);
+  const [seats, setSeats] = useState<number>(0);
+  const [totalAmount, setTotalAmount] = useState<number>(0);
+  const TravelerDetailsFormRef = useRef<HTMLDivElement>(null);
+  const FlightDetailsFormRef = useRef<HTMLDivElement>(null);
 
   const handleSort = (column: string) => {
     if (sortBy === column) {
@@ -62,6 +77,15 @@ const FlightSchedule: React.FC = () => {
       setSortOrder("asc");
     }
   };
+
+  useEffect(() => {
+    if (showTravelerDetails && TravelerDetailsFormRef.current) {
+      TravelerDetailsFormRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+    if (showDetails && FlightDetailsFormRef.current) {
+      FlightDetailsFormRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [showTravelerDetails, showDetails]);
 
   const sortedFlights = [...flights].sort((a, b) => {
     if (!sortBy) return 0;
@@ -74,13 +98,31 @@ const FlightSchedule: React.FC = () => {
     return 0;
   });
 
-  const handleCheckout = () => {
-    // Implement checkout logic here
-    console.log(`Checking out flight with ID: ${selectedFlight}`);
+  const handleToggleDetails = () => {
+    setShowDetails(!showDetails);
   };
 
-  const handleShowCheckout = () => {
+  const handleShowTravelerDetails = () => {
+    setShowTravelerDetails(true);
+  };
+
+  const handleTravelerDetailsSubmit = (
+    newTravelers: Traveler[],
+    newSeats: number,
+    totalPrice: number
+  ) => {
+    setTravelers(newTravelers);
+    setSeats(newSeats);
+    setTotalAmount(totalPrice);
     setShowCheckout(true);
+  };
+
+  const handleTravelerDetailsCancel = () => {
+    setShowTravelerDetails(false);
+  };
+
+  const handlePaymentCancel = () => {
+    setShowCheckout(false);
   };
 
   return (
@@ -168,7 +210,7 @@ const FlightSchedule: React.FC = () => {
             </Table>
           </RadioGroup>
         </CardContent>
-        <CardFooter className="flex justify-end">
+        <CardFooter className="flex justify-end space-x-2">
           <AnimatePresence>
             {selectedFlight && (
               <motion.div
@@ -176,17 +218,79 @@ const FlightSchedule: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
                 transition={{ duration: 0.3 }}
+                className="space-x-2"
               >
-                <Button onClick={handleShowCheckout}>
-                  Proceed to Checkout
+                <FlightDetails
+                  flight={flights.find((f) => f.id === selectedFlight)!}
+                />
+                <Button onClick={handleShowTravelerDetails}>
+                  Proceed to Traveler Details
                 </Button>
               </motion.div>
             )}
           </AnimatePresence>
         </CardFooter>
       </Card>
+      {selectedFlight && showDetails && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.5 }}
+          className="mt-8"
+        >
+          <div ref={FlightDetailsFormRef}>
+            <FlightDetails
+              flight={flights.find((f) => f.id === selectedFlight)!}
+            />
+          </div>
+        </motion.div>
+      )}
 
-      <div className="mt-8">{showCheckout && <PaymentForm />}</div>
+      {selectedFlight && showTravelerDetails && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.5 }}
+          className="mt-8"
+        >
+          <Card>
+            <CardContent className="pt-6">
+              <div ref={TravelerDetailsFormRef}>
+                <TravelerDetailsForm
+                  onSubmit={handleTravelerDetailsSubmit}
+                  onCancel={handleTravelerDetailsCancel}
+                  flightPrice={parseFloat(
+                    flights
+                      .find((f) => f.id === selectedFlight)!
+                      .price.replace("$", "")
+                  )}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
+
+      {showCheckout && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.5 }}
+          className="mt-8"
+        >
+          <Card>
+            <CardContent className="pt-6">
+              <PaymentForm
+                totalAmount={totalAmount}
+                onCancel={handlePaymentCancel}
+              />
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
     </motion.div>
   );
 };
