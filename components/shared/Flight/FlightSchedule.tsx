@@ -114,7 +114,6 @@ const FlightSchedule: React.FC = () => {
     setTravelers(newTravelers);
     setSeats(newSeats);
     setTotalAmount(totalPrice);
-    setShowTravelerDetails(false);
     setShowCheckout(true);
   };
 
@@ -124,7 +123,6 @@ const FlightSchedule: React.FC = () => {
 
   const handlePaymentCancel = () => {
     setShowCheckout(false);
-    setShowTravelerDetails(true);
   };
 
   return (
@@ -275,14 +273,24 @@ const FlightSchedule: React.FC = () => {
         </motion.div>
       )}
 
-      <div className="mt-8">
-        {showCheckout && (
-          <PaymentForm
-            totalAmount={totalAmount}
-            onCancel={handlePaymentCancel}
-          />
-        )}
-      </div>
+      {showCheckout && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.5 }}
+          className="mt-8"
+        >
+          <Card>
+            <CardContent className="pt-6">
+              <PaymentForm
+                totalAmount={totalAmount}
+                onCancel={handlePaymentCancel}
+              />
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
     </motion.div>
   );
 };
