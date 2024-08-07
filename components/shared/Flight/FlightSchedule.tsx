@@ -68,6 +68,7 @@ const FlightSchedule: React.FC = () => {
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const TravelerDetailsFormRef = useRef<HTMLDivElement>(null);
   const FlightDetailsFormRef = useRef<HTMLDivElement>(null);
+  const paymentFormRef = useRef<HTMLDivElement>(null);
 
   const handleSort = (column: string) => {
     if (sortBy === column) {
@@ -85,7 +86,10 @@ const FlightSchedule: React.FC = () => {
     if (showDetails && FlightDetailsFormRef.current) {
       FlightDetailsFormRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [showTravelerDetails, showDetails]);
+    if (showCheckout && paymentFormRef.current) {
+      paymentFormRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [showTravelerDetails, showDetails, showCheckout]);
 
   const sortedFlights = [...flights].sort((a, b) => {
     if (!sortBy) return 0;
@@ -281,14 +285,16 @@ const FlightSchedule: React.FC = () => {
           transition={{ duration: 0.5 }}
           className="mt-8"
         >
-          <Card>
-            <CardContent className="pt-6">
-              <PaymentForm
-                totalAmount={totalAmount}
-                onCancel={handlePaymentCancel}
-              />
-            </CardContent>
-          </Card>
+          <div ref={paymentFormRef}>
+            <Card>
+              <CardContent className="pt-6">
+                <PaymentForm
+                  totalAmount={totalAmount}
+                  onCancel={handlePaymentCancel}
+                />
+              </CardContent>
+            </Card>
+          </div>
         </motion.div>
       )}
     </motion.div>

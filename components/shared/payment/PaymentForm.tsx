@@ -66,6 +66,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ totalAmount, onCancel }) => {
         description: "Your payment has been processed.",
       });
       form.reset();
+      onCancel();
     } catch (error: any) {
       toast({
         title: "Payment Failed",
@@ -198,7 +199,12 @@ const PaymentForm: React.FC<PaymentFormProps> = ({ totalAmount, onCancel }) => {
               </div>
             </CardContent>
             <CardFooter className="flex justify-between">
-              <Button type="button" variant="outline" onClick={onCancel} className="w-1/3">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onCancel}
+                className="w-1/3"
+              >
                 Cancel
               </Button>
               <Button
