@@ -10,6 +10,7 @@ const FlightCard = () => {
   const [showCard, setShowCard] = useState(false);
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const paymentFormRef = useRef<HTMLDivElement>(null);
+  const SeatChangerRef = useRef<HTMLDivElement>(null);
 
   const handleShowCard = () => setShowCard(true);
   const handleShowPaymentForm = () => setShowPaymentForm(true);
@@ -17,6 +18,10 @@ const FlightCard = () => {
   useEffect(() => {
     if (showPaymentForm && paymentFormRef.current) {
       paymentFormRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+
+    if (showCard && SeatChangerRef.current) {
+      SeatChangerRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [showPaymentForm]);
 
@@ -119,7 +124,9 @@ const FlightCard = () => {
       </Card>
 
       {showCard && (
-        <SeatSelection isOpen={showCard} onClose={() => setShowCard(false)} />
+        <div ref={SeatChangerRef}>
+          <SeatSelection isOpen={showCard} onClose={() => setShowCard(false)} />
+        </div>
       )}
       {showPaymentForm && (
         <div ref={paymentFormRef}>

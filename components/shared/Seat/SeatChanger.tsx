@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -8,8 +8,7 @@ const SeatSelection = ({ isOpen }: any) => {
   const rows = [4, 3, 2, 1];
   const columns = ["A", "B", "C", "D"];
   const [selectedSeat, setSelectedSeat] = useState<string | null>(null);
-
-  // List of disabled seats
+  const SeatChangerRef = useRef<HTMLDivElement>(null);
   const disabledSeats = ["4A", "3B", "2C", "1D"];
 
   const { toast } = useToast();
@@ -35,7 +34,6 @@ const SeatSelection = ({ isOpen }: any) => {
         title: "Seat Confirmed",
         description: `Seat ${selectedSeat} has been confirmed!`,
       });
-      // Additional actions like API calls or state updates can be handled here
     }
   };
 
