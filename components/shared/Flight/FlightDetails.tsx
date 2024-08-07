@@ -4,6 +4,15 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Clock, Plane, DollarSign, Info } from "lucide-react";
 import { motion } from "framer-motion";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
 
 interface FlightDetailsProps {
   flight: {
@@ -18,19 +27,20 @@ interface FlightDetailsProps {
 
 const FlightDetails: React.FC<FlightDetailsProps> = ({ flight }) => {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 20 }}
-      transition={{ duration: 0.5 }}
-    >
-      <Card className="w-full max-w-2xl mx-auto bg-gradient-to-br from-blue-50 to-indigo-50">
-        <CardHeader className="bg-[#000435] text-white rounded-t-lg">
-          <CardTitle className="text-2xl font-bold flex items-center">
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button variant="outline">View Flight Details</Button>
+      </SheetTrigger>
+      <SheetContent className="w-[400px] sm:w-[540px]">
+        <SheetHeader>
+          <SheetTitle className="text-2xl font-bold flex items-center">
             <Plane className="mr-2" /> Flight Details
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-6">
+          </SheetTitle>
+          <SheetDescription>
+            Details for flight {flight.id} with {flight.airline}
+          </SheetDescription>
+        </SheetHeader>
+        <div className="mt-6">
           <div className="flex justify-between items-center mb-6">
             <div>
               <h3 className="text-xl font-semibold text-gray-800">
@@ -76,9 +86,9 @@ const FlightDetails: React.FC<FlightDetailsProps> = ({ flight }) => {
               </p>
             </div>
           </div>
-        </CardContent>
-      </Card>
-    </motion.div>
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 };
 
