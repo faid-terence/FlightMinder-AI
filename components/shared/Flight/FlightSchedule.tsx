@@ -93,7 +93,6 @@ const FlightSchedule: React.FC = () => {
   });
 
   const handleCheckout = () => {
-    // Implement checkout logic here
     console.log(`Checking out flight with ID: ${selectedFlight}`);
   };
 
@@ -117,8 +116,6 @@ const FlightSchedule: React.FC = () => {
     setSeats(newSeats);
     setShowTravelerDetails(false);
     setShowCheckout(true);
-    // You might want to store the totalPrice in state if you need it later
-    // setTotalPrice(totalPrice);
   };
 
   const handleTravelerDetailsCancel = () => {
@@ -220,9 +217,7 @@ const FlightSchedule: React.FC = () => {
                 transition={{ duration: 0.3 }}
                 className="space-x-2"
               >
-                <Button variant="outline" onClick={handleToggleDetails}>
-                  {showDetails ? "Hide Details" : "View Details"}
-                </Button>
+                <FlightDetails flight={flights.find((f) => f.id === selectedFlight)!} />
                 <Button onClick={handleShowTravelerDetails}>
                   Proceed to Traveler Details
                 </Button>
