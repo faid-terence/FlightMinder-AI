@@ -29,48 +29,6 @@ export default function ChatPlayGround() {
     flights: [],
   });
 
-  useEffect(() => {
-    const fetchFlightSchedule = async () => {
-      try {
-        const response = await fetch(
-          `https://flying-6d2oyn6d7q-uc.a.run.app/query_flights/${encodeURIComponent(
-            "flights from kigali"
-          )}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-
-        const data = await response.json();
-        setApiResponse(data);
-        console.log("API Response:", data);
-        if (apiResponse) {
-          console.log(Object.values(apiResponse));
-        }
-
-        // Determine which component to show based on the API response
-        if (data.flightSchedule) {
-          setShowFlightSchedule(true);
-          setShowFlightStatus(false);
-        } else if (data.flightStatus) {
-          setShowFlightStatus(true);
-          setShowFlightSchedule(false);
-        }
-      } catch (error) {
-        console.error("Error fetching data from API:", error);
-      }
-    };
-
-    fetchFlightSchedule();
-  }, []);
-
   const handleStatusClick = () => {
     setShowFlightStatus(true);
     setShowFlightSchedule(false);
@@ -195,7 +153,9 @@ export default function ChatPlayGround() {
               </Card>
             )}
 
-            <FlightSchedule flights={apiResponse.flights} />
+            {!apiResponse || apiResponse.flights.length === 0 ? null : (
+              <FlightSchedule flights={apiResponse.flights} />
+            )}
           </main>
         </div>
       </div>
