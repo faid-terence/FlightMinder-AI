@@ -13,55 +13,28 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 import { CornerDownLeft, Paperclip, Mic, Menu } from "lucide-react";
-import FlightSchedule from "../Flight/FlightSchedule";
+import FlightSchedule, { FlightScheduleProps } from "../Flight/FlightSchedule";
 import FlightStatusCard from "../Flight/FlightStatusCard";
 import FlightCard from "../Flight/FlightStatusCard";
 import SeatSelection from "../Seat/SeatChanger";
 import FlightPicker from "../Flight/FlightPicker";
 import ApiResponseDisplay from "./apiDisplat";
 
-const flights = [
-  {
-    id: 1,
-    departure: "8:30 PM",
-    arrival: "4:20 PM+1",
-    duration: "10hr 45min",
-    price: "$531",
-    airline: "United Airlines",
-  },
-  {
-    id: 2,
-    departure: "2:40 PM",
-    arrival: "10:25 AM+1",
-    duration: "10hr 50min",
-    price: "$564",
-    airline: "United Airlines",
-  },
-  {
-    id: 3,
-    departure: "3:00 PM",
-    arrival: "10:50 AM+1",
-    duration: "10hr 45min",
-    price: "$611",
-    airline: "United Airlines",
-  },
-];
-
 export default function ChatPlayGround() {
   const [showFlightSchedule, setShowFlightSchedule] = useState(false);
   const [showFlightStatus, setShowFlightStatus] = useState(false);
   const [showSeatSelection, setShowSeatSelection] = useState(false);
   const [userInput, setUserInput] = useState("");
-  const [apiResponse, setApiResponse] = useState<null | {
-    flightSchedule: any[];
-  }>(null);
+  const [apiResponse, setApiResponse] = useState<FlightScheduleProps>({
+    flights: [],
+  });
 
   useEffect(() => {
     const fetchFlightSchedule = async () => {
       try {
         const response = await fetch(
           `https://flying-6d2oyn6d7q-uc.a.run.app/query_flights/${encodeURIComponent(
-            ""
+            "flights from kigali"
           )}`,
           {
             method: "GET",
@@ -78,6 +51,9 @@ export default function ChatPlayGround() {
         const data = await response.json();
         setApiResponse(data);
         console.log("API Response:", data);
+        if (apiResponse) {
+          console.log(Object.values(apiResponse));
+        }
 
         // Determine which component to show based on the API response
         if (data.flightSchedule) {
@@ -108,7 +84,9 @@ export default function ChatPlayGround() {
     window.location.reload();
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
     setUserInput(e.target.value);
   };
 
@@ -133,7 +111,8 @@ export default function ChatPlayGround() {
 
         const data = await response.json();
         setApiResponse(data);
-        console.log("API Response:", data);
+        // console.log("API Response:", apiResponse);
+        console.log(typeof apiResponse);
 
         setUserInput("");
       } catch (error) {
@@ -216,8 +195,8 @@ export default function ChatPlayGround() {
               </Card>
             )}
 
-            {/* <ApiResponseDisplay response={apiResponse} /> */}
-            <FlightSchedule flights={flights} />
+            <ApiResponseDisplay response={apiResponse} />
+            <FlightSchedule flights={apiResponse.flights} />
           </main>
         </div>
       </div>

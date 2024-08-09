@@ -26,10 +26,13 @@ import TravelerDetailsForm from "./TravelerDetailsForm";
 interface Flight {
   id: number;
   departure: string;
-  arrival: string;
-  duration: string;
+  destination: string;
+  date: Date;
+  flight_number: string;
   price: string;
-  airline: string;
+  arrival_time: string; // Corrected spelling from "arival_time"
+  departure_time: string;
+  duration: string;
 }
 
 interface Traveler {
@@ -37,7 +40,7 @@ interface Traveler {
   type: "adult" | "child";
 }
 
-interface FlightScheduleProps {
+export interface FlightScheduleProps {
   flights: Flight[];
 }
 
@@ -76,17 +79,6 @@ const FlightSchedule: React.FC<FlightScheduleProps> = ({ flights }) => {
       paymentFormRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [showTravelerDetails, showDetails, showCheckout]);
-
-  const sortedFlights = [...flights].sort((a, b) => {
-    if (!sortBy) return 0;
-
-    const aValue = a[sortBy as keyof Flight];
-    const bValue = b[sortBy as keyof Flight];
-
-    if (aValue < bValue) return sortOrder === "asc" ? -1 : 1;
-    if (aValue > bValue) return sortOrder === "asc" ? 1 : -1;
-    return 0;
-  });
 
   const handleToggleDetails = () => {
     setShowDetails(!showDetails);
@@ -163,7 +155,7 @@ const FlightSchedule: React.FC<FlightScheduleProps> = ({ flights }) => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {sortedFlights.map((flight) => (
+                {flights.map((flight) => (
                   <TableRow key={flight.id}>
                     <TableCell>
                       <RadioGroupItem
@@ -175,13 +167,13 @@ const FlightSchedule: React.FC<FlightScheduleProps> = ({ flights }) => {
                       <Label htmlFor={`flight-${flight.id}`}>
                         <div>{flight.departure}</div>
                         <div className="text-sm text-gray-500">
-                          {flight.airline}
+                          {flight.departure_time}
                         </div>
                       </Label>
                     </TableCell>
                     <TableCell>
                       <Label htmlFor={`flight-${flight.id}`}>
-                        {flight.arrival}
+                        {flight.date.toString()}
                       </Label>
                     </TableCell>
                     <TableCell>
@@ -210,9 +202,9 @@ const FlightSchedule: React.FC<FlightScheduleProps> = ({ flights }) => {
                 transition={{ duration: 0.3 }}
                 className="space-x-2"
               >
-                <FlightDetails
+                {/* <FlightDetails
                   flight={flights.find((f) => f.id === selectedFlight)!}
-                />
+                /> */}
                 <Button onClick={handleShowTravelerDetails}>
                   Proceed to Traveler Details
                 </Button>
@@ -230,9 +222,9 @@ const FlightSchedule: React.FC<FlightScheduleProps> = ({ flights }) => {
           className="mt-8"
         >
           <div ref={FlightDetailsFormRef}>
-            <FlightDetails
+            {/* <FlightDetails
               flight={flights.find((f) => f.id === selectedFlight)!}
-            />
+            /> */}
           </div>
         </motion.div>
       )}
