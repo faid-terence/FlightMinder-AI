@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,23 +13,67 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 import { CornerDownLeft, Paperclip, Mic, Menu } from "lucide-react";
-import FlightSchedule from "../Flight/FlightSchedule";
+import FlightSchedule, { FlightScheduleProps } from "../Flight/FlightSchedule";
 import FlightStatusCard from "../Flight/FlightStatusCard";
 import FlightCard from "../Flight/FlightStatusCard";
 import SeatSelection from "../Seat/SeatChanger";
 import FlightPicker from "../Flight/FlightPicker";
+import ApiResponseDisplay from "./apiDisplat";
 
 export default function ChatPlayGround() {
   const [showFlightSchedule, setShowFlightSchedule] = useState(false);
   const [showFlightStatus, setShowFlightStatus] = useState(false);
   const [showSeatSelection, setShowSeatSelection] = useState(false);
+  const [userInput, setUserInput] = useState("");
+  const [apiResponse, setApiResponse] = useState<FlightScheduleProps>({
+    flights: [],
+  });
 
-  const handleCardClick = () => {
-    setShowFlightSchedule(true);
-  };
+  useEffect(() => {
+    const fetchFlightSchedule = async () => {
+      try {
+        const response = await fetch(
+          `https://flying-6d2oyn6d7q-uc.a.run.app/query_flights/${encodeURIComponent(
+            "flights from kigali"
+          )}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+        setApiResponse(data);
+        console.log("API Response:", data);
+        if (apiResponse) {
+          console.log(Object.values(apiResponse));
+        }
+
+        // Determine which component to show based on the API response
+        if (data.flightSchedule) {
+          setShowFlightSchedule(true);
+          setShowFlightStatus(false);
+        } else if (data.flightStatus) {
+          setShowFlightStatus(true);
+          setShowFlightSchedule(false);
+        }
+      } catch (error) {
+        console.error("Error fetching data from API:", error);
+      }
+    };
+
+    fetchFlightSchedule();
+  }, []);
 
   const handleStatusClick = () => {
     setShowFlightStatus(true);
+    setShowFlightSchedule(false);
   };
 
   const handleSeatChanger = () => {
@@ -38,6 +82,43 @@ export default function ChatPlayGround() {
 
   const reloadPage = () => {
     window.location.reload();
+  };
+
+  const handleInputChange = (e: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
+    setUserInput(e.target.value);
+  };
+
+  const handleSendMessage = async () => {
+    if (userInput.trim()) {
+      try {
+        const response = await fetch(
+          `https://flying-6d2oyn6d7q-uc.a.run.app/query_flights/${encodeURIComponent(
+            userInput
+          )}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+        setApiResponse(data);
+        // console.log("API Response:", apiResponse);
+        console.log(typeof apiResponse);
+
+        setUserInput("");
+      } catch (error) {
+        console.error("Error fetching data from API:", error);
+      }
+    }
   };
 
   return (
@@ -114,36 +195,8 @@ export default function ChatPlayGround() {
               </Card>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-              {!showFlightSchedule && !showFlightStatus && (
-                <Card
-                  className="bg-white shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer"
-                  onClick={handleCardClick}
-                >
-                  <CardContent className="p-6">
-                    <p className="text-gray-600">
-                      List flights flying from San Francisco to Rome today
-                    </p>
-                  </CardContent>
-                </Card>
-              )}
-              {!showFlightSchedule && !showFlightStatus && (
-                <Card
-                  className="bg-white shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer"
-                  onClick={handleStatusClick}
-                >
-                  <CardContent className="p-6">
-                    <p className="text-gray-600">
-                      What is the status of flight BA142?
-                    </p>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
-            {showFlightSchedule && <FlightSchedule />}
-            {showFlightStatus && <FlightCard />}
-            {showSeatSelection && <SeatSelection />}
-            {/* <FlightPicker /> */}
+            <ApiResponseDisplay response={apiResponse} />
+            <FlightSchedule flights={apiResponse.flights} />
           </main>
         </div>
       </div>
@@ -153,6 +206,8 @@ export default function ChatPlayGround() {
           <Input
             placeholder="Type your message here..."
             className="flex-grow bg-white border-gray-300 text-gray-800 placeholder-gray-400"
+            value={userInput}
+            onChange={handleInputChange}
           />
           <TooltipProvider>
             <Tooltip>
@@ -176,7 +231,7 @@ export default function ChatPlayGround() {
               <TooltipContent side="top">Use Microphone</TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          <Button className="text-white">
+          <Button className="text-white" onClick={handleSendMessage}>
             <CornerDownLeft className="mr-2 h-4 w-4" />
             Send
           </Button>

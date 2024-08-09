@@ -23,39 +23,28 @@ import PaymentForm from "../payment/PaymentForm";
 import FlightDetails from "./FlightDetails";
 import TravelerDetailsForm from "./TravelerDetailsForm";
 
-const flights = [
-  {
-    id: 1,
-    departure: "8:30 PM",
-    arrival: "4:20 PM+1",
-    duration: "10hr 45min",
-    price: "$531",
-    airline: "United Airlines",
-  },
-  {
-    id: 2,
-    departure: "2:40 PM",
-    arrival: "10:25 AM+1",
-    duration: "10hr 50min",
-    price: "$564",
-    airline: "United Airlines",
-  },
-  {
-    id: 3,
-    departure: "3:00 PM",
-    arrival: "10:50 AM+1",
-    duration: "10hr 45min",
-    price: "$611",
-    airline: "United Airlines",
-  },
-];
+interface Flight {
+  id: number;
+  departure: string;
+  destination: string;
+  date: Date;
+  flight_number: string;
+  price: string;
+  arrival_time: string; // Corrected spelling from "arival_time"
+  departure_time: string;
+  duration: string;
+}
 
 interface Traveler {
   name: string;
   type: "adult" | "child";
 }
 
-const FlightSchedule: React.FC = () => {
+export interface FlightScheduleProps {
+  flights: Flight[];
+}
+
+const FlightSchedule: React.FC<FlightScheduleProps> = ({ flights }) => {
   const [sortBy, setSortBy] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [selectedFlight, setSelectedFlight] = useState<number | null>(null);
@@ -90,17 +79,6 @@ const FlightSchedule: React.FC = () => {
       paymentFormRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [showTravelerDetails, showDetails, showCheckout]);
-
-  const sortedFlights = [...flights].sort((a, b) => {
-    if (!sortBy) return 0;
-
-    const aValue = a[sortBy as keyof typeof a];
-    const bValue = b[sortBy as keyof typeof b];
-
-    if (aValue < bValue) return sortOrder === "asc" ? -1 : 1;
-    if (aValue > bValue) return sortOrder === "asc" ? 1 : -1;
-    return 0;
-  });
 
   const handleToggleDetails = () => {
     setShowDetails(!showDetails);
@@ -177,7 +155,7 @@ const FlightSchedule: React.FC = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {sortedFlights.map((flight) => (
+                {flights.map((flight) => (
                   <TableRow key={flight.id}>
                     <TableCell>
                       <RadioGroupItem
@@ -189,13 +167,13 @@ const FlightSchedule: React.FC = () => {
                       <Label htmlFor={`flight-${flight.id}`}>
                         <div>{flight.departure}</div>
                         <div className="text-sm text-gray-500">
-                          {flight.airline}
+                          {flight.departure_time}
                         </div>
                       </Label>
                     </TableCell>
                     <TableCell>
                       <Label htmlFor={`flight-${flight.id}`}>
-                        {flight.arrival}
+                        {flight.date.toString()}
                       </Label>
                     </TableCell>
                     <TableCell>
@@ -224,9 +202,9 @@ const FlightSchedule: React.FC = () => {
                 transition={{ duration: 0.3 }}
                 className="space-x-2"
               >
-                <FlightDetails
+                {/* <FlightDetails
                   flight={flights.find((f) => f.id === selectedFlight)!}
-                />
+                /> */}
                 <Button onClick={handleShowTravelerDetails}>
                   Proceed to Traveler Details
                 </Button>
@@ -244,9 +222,9 @@ const FlightSchedule: React.FC = () => {
           className="mt-8"
         >
           <div ref={FlightDetailsFormRef}>
-            <FlightDetails
+            {/* <FlightDetails
               flight={flights.find((f) => f.id === selectedFlight)!}
-            />
+            /> */}
           </div>
         </motion.div>
       )}
