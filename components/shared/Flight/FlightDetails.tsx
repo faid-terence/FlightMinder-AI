@@ -18,10 +18,13 @@ interface FlightDetailsProps {
   flight: {
     id: number;
     departure: string;
-    arrival: string;
-    duration: string;
+    destination: string;
+    date: Date;
+    flight_number: string;
     price: string;
-    airline: string;
+    arrival_time: string; // Corrected spelling from "arival_time"
+    departure_time: string;
+    duration: string;
   };
 }
 
@@ -37,14 +40,14 @@ const FlightDetails: React.FC<FlightDetailsProps> = ({ flight }) => {
             <Plane className="mr-2" /> Flight Details
           </SheetTitle>
           <SheetDescription>
-            Details for flight {flight.id} with {flight.airline}
+            Details for flight {flight.id} with {flight.destination}
           </SheetDescription>
         </SheetHeader>
         <div className="mt-6">
           <div className="flex justify-between items-center mb-6">
             <div>
               <h3 className="text-xl font-semibold text-gray-800">
-                {flight.airline}
+                {flight.destination}
               </h3>
               <p className="text-sm text-gray-600">Flight ID: {flight.id}</p>
             </div>
@@ -64,7 +67,7 @@ const FlightDetails: React.FC<FlightDetailsProps> = ({ flight }) => {
               <h4 className="text-sm font-medium text-gray-500 mb-1">
                 Arrival
               </h4>
-              <p className="text-lg font-semibold">{flight.arrival}</p>
+              <p className="text-lg font-semibold">{flight.destination}</p>
             </div>
           </div>
           <Separator className="my-4" />

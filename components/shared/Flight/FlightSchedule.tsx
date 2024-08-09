@@ -202,9 +202,9 @@ const FlightSchedule: React.FC<FlightScheduleProps> = ({ flights }) => {
                 transition={{ duration: 0.3 }}
                 className="space-x-2"
               >
-                {/* <FlightDetails
+                <FlightDetails
                   flight={flights.find((f) => f.id === selectedFlight)!}
-                /> */}
+                />
                 <Button onClick={handleShowTravelerDetails}>
                   Proceed to Traveler Details
                 </Button>
@@ -222,9 +222,9 @@ const FlightSchedule: React.FC<FlightScheduleProps> = ({ flights }) => {
           className="mt-8"
         >
           <div ref={FlightDetailsFormRef}>
-            {/* <FlightDetails
+            <FlightDetails
               flight={flights.find((f) => f.id === selectedFlight)!}
-            /> */}
+            />
           </div>
         </motion.div>
       )}

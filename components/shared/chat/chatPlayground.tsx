@@ -195,7 +195,6 @@ export default function ChatPlayGround() {
               </Card>
             )}
 
-            <ApiResponseDisplay response={apiResponse} />
             <FlightSchedule flights={apiResponse.flights} />
           </main>
         </div>
