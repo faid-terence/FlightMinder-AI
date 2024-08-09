@@ -19,6 +19,7 @@ import FlightCard from "../Flight/FlightStatusCard";
 import SeatSelection from "../Seat/SeatChanger";
 import FlightPicker from "../Flight/FlightPicker";
 import ApiResponseDisplay from "./apiDisplat";
+import { set } from "react-hook-form";
 
 export default function ChatPlayGround() {
   const [showFlightSchedule, setShowFlightSchedule] = useState(false);
@@ -28,6 +29,12 @@ export default function ChatPlayGround() {
   const [apiResponse, setApiResponse] = useState<FlightScheduleProps>({
     flights: [],
   });
+  const [availableFlights, setAvailableFlights] = useState<FlightScheduleProps>(
+    {
+      flights: [],
+    }
+  );
+  const [viewAvailableFlights, setViewAvailableFlights] = useState(false);
 
   const handleStatusClick = () => {
     setShowFlightStatus(true);
@@ -69,10 +76,10 @@ export default function ChatPlayGround() {
 
         const data = await response.json();
         setApiResponse(data);
-        // console.log("API Response:", apiResponse);
-        console.log(typeof apiResponse);
-
         setUserInput("");
+        if (data.flights.length === 0) {
+          setViewAvailableFlights(true);
+        }
       } catch (error) {
         console.error("Error fetching data from API:", error);
       }
@@ -132,7 +139,7 @@ export default function ChatPlayGround() {
           </header>
 
           <main className="max-w-3xl mx-auto">
-            {!showFlightSchedule && !showFlightStatus && (
+            {apiResponse.flights.length !== 0 ? null : (
               <Card className="mb-12 border-none bg-transparent">
                 <CardHeader>
                   <CardTitle className="text-4xl font-bold text-center text-[#000435]">
@@ -156,6 +163,7 @@ export default function ChatPlayGround() {
             {!apiResponse || apiResponse.flights.length === 0 ? null : (
               <FlightSchedule flights={apiResponse.flights} />
             )}
+            {viewAvailableFlights ? <FlightPicker /> : null}
           </main>
         </div>
       </div>
