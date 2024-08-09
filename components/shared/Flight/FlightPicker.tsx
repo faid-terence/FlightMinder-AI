@@ -10,6 +10,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { motion } from "framer-motion";
+
 interface Flight {
   id: number;
   from: string;
@@ -58,6 +61,26 @@ const FlightPicker = () => {
 
   return (
     <div className="container mx-auto p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="flex items-start space-x-4 mb-6"
+      >
+        <Avatar>
+          <AvatarImage src="/path-to-avatar-image.jpg" alt="Avatar" />
+          <AvatarFallback>AI</AvatarFallback>
+        </Avatar>
+        <div>
+          <CardTitle className="text-lg font-semibold mb-2">Hello!</CardTitle>
+          <p>
+            We don&apos;t have flights to show you right now. Please check back
+            later. Thank you!
+            <br />
+            However, here are some available flights for you to choose from:
+          </p>
+        </div>
+      </motion.div>
       <h1 className="text-2xl font-bold mb-4">Available Flights</h1>
       <ScrollArea className="h-[400px]">
         {availableFlights.map((flight) => (
