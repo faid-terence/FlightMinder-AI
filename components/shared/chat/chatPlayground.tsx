@@ -56,11 +56,35 @@ export default function ChatPlayGround() {
   };
 
   const handleSendMessage = async () => {
-    if (userInput.trim()) {
-      try {
-        const response = await fetch(
+    const query = userInput.trim();
+    if (!query) return; // Don't send empty queries
+
+    try {
+      const response = await fetch(
+        `https://flying-6d2oyn6d7q-uc.a.run.app/query_flights/${encodeURIComponent(
+          query
+        )}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      setApiResponse(data);
+      setUserInput("");
+
+      if (data.flights.length === 0) {
+        // If the response is empty, send a new query for flights from Kigali
+        const kigaliResponse = await fetch(
           `https://flying-6d2oyn6d7q-uc.a.run.app/query_flights/${encodeURIComponent(
-            userInput
+            "flights from kigali"
           )}`,
           {
             method: "GET",
@@ -70,19 +94,18 @@ export default function ChatPlayGround() {
           }
         );
 
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
+        if (!kigaliResponse.ok) {
+          throw new Error("Network response was not ok for Kigali flights");
         }
 
-        const data = await response.json();
-        setApiResponse(data);
-        setUserInput("");
-        if (data.flights.length === 0) {
-          setViewAvailableFlights(true);
-        }
-      } catch (error) {
-        console.error("Error fetching data from API:", error);
+        const kigaliData = await kigaliResponse.json();
+        setAvailableFlights(kigaliData);
+        setViewAvailableFlights(true);
+      } else {
+        setViewAvailableFlights(false);
       }
+    } catch (error) {
+      console.error("Error fetching data from API:", error);
     }
   };
 
@@ -139,7 +162,7 @@ export default function ChatPlayGround() {
           </header>
 
           <main className="max-w-3xl mx-auto">
-            {apiResponse.flights.length !== 0 ? null : (
+            {apiResponse.flights.length !== 0  || viewAvailableFlights? null : (
               <Card className="mb-12 border-none bg-transparent">
                 <CardHeader>
                   <CardTitle className="text-4xl font-bold text-center text-[#000435]">
@@ -161,9 +184,19 @@ export default function ChatPlayGround() {
             )}
 
             {!apiResponse || apiResponse.flights.length === 0 ? null : (
-              <FlightSchedule flights={apiResponse.flights} />
+              <FlightSchedule
+                flights={apiResponse.flights}
+                message="Hre are the available flights from the selected routes:"
+              />
             )}
-            {viewAvailableFlights ? <FlightPicker /> : null}
+            {viewAvailableFlights ? (
+              <FlightSchedule
+                flights={availableFlights.flights}
+                message=" We don't have flights to show you right now. Please check back
+            later. Thank you!
+            However, here are some available flights for you to choose from:"
+              />
+            ) : null}
           </main>
         </div>
       </div>

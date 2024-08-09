@@ -42,9 +42,13 @@ interface Traveler {
 
 export interface FlightScheduleProps {
   flights: Flight[];
+  message?: string;
 }
 
-const FlightSchedule: React.FC<FlightScheduleProps> = ({ flights }) => {
+const FlightSchedule: React.FC<FlightScheduleProps> = ({
+  flights,
+  message,
+}) => {
   const [sortBy, setSortBy] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [selectedFlight, setSelectedFlight] = useState<number | null>(null);
@@ -125,9 +129,7 @@ const FlightSchedule: React.FC<FlightScheduleProps> = ({ flights }) => {
         </Avatar>
         <div>
           <CardTitle className="text-lg font-semibold mb-2">Hello!</CardTitle>
-          <p className="text-sm text-gray-600">
-            List flights flying from San Francisco to Rome today
-          </p>
+          <p className="text-sm text-gray-600">{message}</p>
         </div>
       </div>
       <Card className="w-full max-w-4xl mx-auto">
@@ -177,7 +179,10 @@ const FlightSchedule: React.FC<FlightScheduleProps> = ({ flights }) => {
                     </TableCell>
                     <TableCell>
                       <Label htmlFor={`flight-${flight.id}`}>
-                        {flight.date.toString()}
+                        <div>{flight.destination}</div>
+                        <div className="text-sm text-gray-500">
+                          {flight.arrival_time}
+                        </div>
                       </Label>
                     </TableCell>
                     <TableCell>

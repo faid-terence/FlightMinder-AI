@@ -40,7 +40,7 @@ const FlightDetails: React.FC<FlightDetailsProps> = ({ flight }) => {
             <Plane className="mr-2" /> Flight Details
           </SheetTitle>
           <SheetDescription>
-            Details for flight {flight.id} with {flight.destination}
+            Details for flight {flight.id} with {flight.destination} Airlines
           </SheetDescription>
         </SheetHeader>
         <div className="mt-6">
