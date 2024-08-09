@@ -67,6 +67,10 @@ const FlightSchedule: React.FC<FlightScheduleProps> = ({ flights }) => {
       setSortOrder("asc");
     }
   };
+  const parsePrice = (price: string | number): number => {
+    if (typeof price === "number") return price;
+    return parseFloat(price.replace(/[^0-9.-]+/g, ""));
+  };
 
   useEffect(() => {
     if (showTravelerDetails && TravelerDetailsFormRef.current) {
@@ -243,10 +247,8 @@ const FlightSchedule: React.FC<FlightScheduleProps> = ({ flights }) => {
                 <TravelerDetailsForm
                   onSubmit={handleTravelerDetailsSubmit}
                   onCancel={handleTravelerDetailsCancel}
-                  flightPrice={parseFloat(
-                    flights
-                      .find((f) => f.id === selectedFlight)!
-                      .price.replace("$", "")
+                  flightPrice={parsePrice(
+                    flights.find((f) => f.id === selectedFlight)!.price
                   )}
                 />
               </div>
