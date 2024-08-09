@@ -23,39 +23,25 @@ import PaymentForm from "../payment/PaymentForm";
 import FlightDetails from "./FlightDetails";
 import TravelerDetailsForm from "./TravelerDetailsForm";
 
-const flights = [
-  {
-    id: 1,
-    departure: "8:30 PM",
-    arrival: "4:20 PM+1",
-    duration: "10hr 45min",
-    price: "$531",
-    airline: "United Airlines",
-  },
-  {
-    id: 2,
-    departure: "2:40 PM",
-    arrival: "10:25 AM+1",
-    duration: "10hr 50min",
-    price: "$564",
-    airline: "United Airlines",
-  },
-  {
-    id: 3,
-    departure: "3:00 PM",
-    arrival: "10:50 AM+1",
-    duration: "10hr 45min",
-    price: "$611",
-    airline: "United Airlines",
-  },
-];
+interface Flight {
+  id: number;
+  departure: string;
+  arrival: string;
+  duration: string;
+  price: string;
+  airline: string;
+}
 
 interface Traveler {
   name: string;
   type: "adult" | "child";
 }
 
-const FlightSchedule: React.FC = () => {
+interface FlightScheduleProps {
+  flights: Flight[];
+}
+
+const FlightSchedule: React.FC<FlightScheduleProps> = ({ flights }) => {
   const [sortBy, setSortBy] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [selectedFlight, setSelectedFlight] = useState<number | null>(null);
@@ -94,8 +80,8 @@ const FlightSchedule: React.FC = () => {
   const sortedFlights = [...flights].sort((a, b) => {
     if (!sortBy) return 0;
 
-    const aValue = a[sortBy as keyof typeof a];
-    const bValue = b[sortBy as keyof typeof b];
+    const aValue = a[sortBy as keyof Flight];
+    const bValue = b[sortBy as keyof Flight];
 
     if (aValue < bValue) return sortOrder === "asc" ? -1 : 1;
     if (aValue > bValue) return sortOrder === "asc" ? 1 : -1;
